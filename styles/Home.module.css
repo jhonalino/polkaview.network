@@ -5,7 +5,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: #15202b;
 }
+
 
 .main {
   padding: 5rem 0;
@@ -59,7 +61,8 @@
 
 .description {
   line-height: 1.5;
-  font-size: 1.5rem;
+  font-size: 1rem;
+  color: #8899a6;
 }
 
 .code {
