@@ -61,6 +61,7 @@
 
 .description {
   line-height: 1.5;
+  margin: .5px;
   font-size: 1rem;
   color: #8899a6;
 }

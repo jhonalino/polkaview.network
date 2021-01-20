@@ -8,11 +8,17 @@ const { promisify } = require("util");
 const getAsync = promisify(client.get).bind(client);
 
 export default function Home(props) {
+
+    var text = `~${ props.minDotToNominate } DOT min stake | Polkaview`;
     return (
         <div className={styles.container}>
             <Head>
-                <title>Polkaview</title>
+                <title>{ text }</title>
                 <link rel="icon" href="/favicon.ico" />
+                <meta property="og:type" content="website"/>
+                <meta property="og:url" content="https://polkaview.network/"/>
+                <meta property="og:title" content={ text }/>
+                <meta property="og:description" content={ text }/>
             </Head>
 
             <main className={styles.main}>
@@ -23,7 +29,9 @@ export default function Home(props) {
                 <p className={styles.description}>
                     minimum dot to stake this era
                 </p>
-
+                <a style={{color:'white', marginTop: '10px' }} target="_blank" href="https://github.com/jhonalino/polkaview.network">
+                    <img style={{ width: '25px' }}src="/github.png"/>
+                </a>
             </main>
 
         </div>
