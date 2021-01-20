@@ -2,11 +2,14 @@ const { ApiPromise, WsProvider } = require('@polkadot/api')
 const { isHex } = require('@polkadot/util')
 const lowdb = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
-
-const adapter = new FileSync('db.json');
+const redis = require('redis');
+const client = redis.createClient();
+const adapter = new FileSync('db'+(new Date())+'.json');
 const db  = lowdb(adapter);
 
-db.defaults({ minDotToNominate: '' });
+client.on('error', function(error) {
+	console.error(error);
+});
 
 let DOT_DECIMAL_PLACES = 10000000000;
 let lowest = "no one";
@@ -182,9 +185,9 @@ let lowestMinNominator = "no one";
   console.log(`Average Stake (Among Non 100% Commission Validators): ${averageStakeNon100} ${getSuffix()}`)
   console.log(`Average Commission (Among Non 100% Commission Validators): ${averageCommissionNon100} %`)
 
-
-  db.set('minDotToNominate',`${lowestMinStake / DOT_DECIMAL_PLACES}`)
-        .write();
+  console.log('kikokikokiko ================ ',`${lowestMinStake / DOT_DECIMAL_PLACES}`)
+  client.set("lowestMinStake", lowestMinStake, redis.print);
+  client.get("lowestMinStake", redis.print);
 
   process.exit()
 })()

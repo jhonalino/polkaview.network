@@ -1,11 +1,11 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-const lowdb = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
 
-const adapter = new FileSync('db.json');
-const db  = lowdb(adapter);
+const redis = require('redis');
+const client = redis.createClient();
+const { promisify } = require("util");
 
+const getAsync = promisify(client.get).bind(client);
 
 export default function Home(props) {
   return (
@@ -13,6 +13,7 @@ export default function Home(props) {
       <Head>
         <title>Polkaview</title>
         <link rel="icon" href="/favicon.ico" />
+	  {props.t}
       </Head>
 
       <main className={styles.main}>
@@ -33,11 +34,10 @@ export default function Home(props) {
 
 export async function getServerSideProps(props) {
 
-    var minDotToNominate = db.get( 'minDotToNominate' )
-        .value();
+    var minDotToNominate = await getAsync('lowestMinStake'); 
 
     return {
-        props: { minDotToNominate: parseFloat(minDotToNominate).toFixed(2) },
+	    props: { minDotToNominate: parseFloat(minDotToNominate).toFixed(2), t: minDotToNominate },
     }
 
 }
