@@ -8,27 +8,26 @@ const { promisify } = require("util");
 const getAsync = promisify(client.get).bind(client);
 
 export default function Home(props) {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Polkaview</title>
-        <link rel="icon" href="/favicon.ico" />
-	  {props.t}
-      </Head>
+    return (
+        <div className={styles.container}>
+            <Head>
+                <title>Polkaview</title>
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-           <a href="/">{ props.minDotToNominate } DOT</a>
-        </h1>
+            <main className={styles.main}>
+                <h1 className={styles.title}>
+                    <a href="/">~{ props.minDotToNominate } DOT</a>
+                </h1>
 
-        <p className={styles.description}>
-            minimum dot to stake this era
-        </p>
+                <p className={styles.description}>
+                    minimum dot to stake this era
+                </p>
 
-      </main>
+            </main>
 
-    </div>
-  )
+        </div>
+    )
 }
 
 
@@ -37,7 +36,9 @@ export async function getServerSideProps(props) {
     var minDotToNominate = await getAsync('lowestMinStake'); 
 
     return {
-	    props: { minDotToNominate: parseFloat(minDotToNominate).toFixed(2), t: minDotToNominate },
+        props: { 
+            minDotToNominate: parseFloat(minDotToNominate).toFixed(1),
+        },
     }
 
 }

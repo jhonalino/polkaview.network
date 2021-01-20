@@ -4,8 +4,6 @@ const lowdb = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 const redis = require('redis');
 const client = redis.createClient();
-const adapter = new FileSync('db'+(new Date())+'.json');
-const db  = lowdb(adapter);
 
 client.on('error', function(error) {
 	console.error(error);
@@ -186,8 +184,7 @@ let lowestMinNominator = "no one";
   console.log(`Average Commission (Among Non 100% Commission Validators): ${averageCommissionNon100} %`)
 
   console.log('kikokikokiko ================ ',`${lowestMinStake / DOT_DECIMAL_PLACES}`)
-  client.set("lowestMinStake", lowestMinStake, redis.print);
-  client.get("lowestMinStake", redis.print);
+  client.set("lowestMinStake", `${lowestMinStake / DOT_DECIMAL_PLACES}`, redis.print);
 
   process.exit()
 })()
