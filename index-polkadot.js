@@ -192,7 +192,7 @@ let lowestMinNominator = "no one";
     console.log("highestStakedValidator", _highestStakedValidator );
     client.set("highestStakedValidator", _highestStakedValidator , redis.print);
 
-    var _lowestStakedValidator = lowestAmount;
+    var _lowestStakedValidator = lowestNonZeroAmount;
     console.log("lowestStakedValidator", _lowestStakedValidator );
     client.set("lowestStakedValidator", _lowestStakedValidator, redis.print);
 
