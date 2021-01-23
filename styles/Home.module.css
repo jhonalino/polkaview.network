@@ -10,12 +10,12 @@
 
 
 .main {
-    padding: 5rem 0;
+    padding: 1rem;
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
 }
 
 .footer {
@@ -52,18 +52,29 @@
 .title {
     margin: 0;
     line-height: 1.15;
-    font-size: 3rem;
+    font-size: 2rem;
+    text-align: left;
+}
+
+
+@media (min-width: 366px) {
+
+    .title {
+        font-size: 3rem;
+    }
+
 }
 
 .title,
 .description {
-    text-align: center;
+    text-align: right;
 }
 
 .description {
     line-height: 1.5;
     text-transform: lowercase;
     margin: .5px;
+    margin-bottom: 0;
     font-size: 1rem;
     color: #8899a6;
 }

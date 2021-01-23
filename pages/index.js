@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import NumberFormat from 'react-number-format';
+import CountUp from 'react-countup';
 
 const redis = require('redis');
 const client = redis.createClient();
@@ -8,7 +9,43 @@ const { promisify } = require("util");
 
 const getAsync = promisify(client.get).bind(client);
 
+
+const StatDisplay = function( props ) {
+
+    console.log("test", props);
+
+    return (
+        <div className="stat-display">
+
+            <p className={styles.description}>
+                <span className="is-white "> { props.title } </span> { props.label }
+            </p>
+
+            <CountUp
+                start={ 0 }
+                delay={ 0 }
+                end={ props.val }
+                duration={2.75}
+                separator=","
+                decimals={ props.decimals || 0 }
+                prefix={ props.prefix || "" }
+            >
+                {({ countUpRef, start }) => (
+                    <h1 className={styles.title}>
+                        <a href="/" ><span className="letter-spacing-md" ref={countUpRef}></span><span> DOT</span></a>
+                    </h1>
+                )}
+            </CountUp>
+
+        </div>
+    );
+
+
+}
+
 export default function Home(props) {
+
+
 
     var text = `~${ props.minDotToNominate } DOT min stake | Polkaview`;
     return (
@@ -25,41 +62,12 @@ export default function Home(props) {
             </Head>
 
             <main className={styles.main}>
-                <div className="stat-display">
+                
+                <StatDisplay decimals={2} prefix="~" val={ props.minDotToNominate } title="minimum staked" label=" to get rewards" />
 
-                    <h1 className={styles.title}>
-                        <a href="/" ><span class="letter-spacing-md">~{ props.minDotToNominate }</span> DOT</a>
-                    </h1>
+                <StatDisplay val={ props.lowestStakedNominatorDots } title="minimum staked validator" label=" backings" />
 
-                    <p className={styles.description}>
-                        <span class="is-white ">minimum staked</span> to get rewards
-                    </p>
-
-                </div>
-
-                <div className="stat-display">
-
-                    <h1 className={styles.title}>
-                        <a href="/"><span class="letter-spacing-md"><NumberFormat displayType={'text'} thousandSeparator={true} value={ props.lowestStakedNominatorDots } /></span> DOT</a>
-                    </h1>
-
-                    <p className={styles.description}>
-                        <span class="is-white">LOWEST Staked Validator </span> backings
-                    </p>
-
-                </div>
-
-                <div className="stat-display">
-
-                    <h1 className={styles.title}>
-                        <a href="/"><span class="letter-spacing-md"><NumberFormat displayType={'text'} thousandSeparator={true} value={ props.highestStakedNominatorDots } /></span> DOT</a>
-                    </h1>
-
-                    <p className={styles.description}>
-                        <span class="is-white">Highest Staked Validator </span> backings
-                    </p>
-
-                </div>
+                <StatDisplay val={ props.highestStakedNominatorDots } title="highest staked validator" label=" backings" />
 
                 <a style={{color:'white', marginTop: '10px' }} target="_blank" href="https://github.com/jhonalino/polkaview.network">
 
@@ -82,9 +90,9 @@ export async function getServerSideProps(props) {
 
     return {
         props: { 
-            minDotToNominate: parseFloat(minDotToNominate).toFixed(1),
-            lowestStakedNominatorDots: parseFloat(lowestStakedNominatorDots).toFixed(0),
-            highestStakedNominatorDots: parseFloat(highestStakedNominatorDots).toFixed(0),
+            minDotToNominate: parseFloat(minDotToNominate),
+            lowestStakedNominatorDots: parseFloat(lowestStakedNominatorDots),
+            highestStakedNominatorDots: parseFloat(highestStakedNominatorDots),
         },
     }
 
