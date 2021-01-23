@@ -18,6 +18,7 @@
     align-items: flex-end;
 }
 
+
 .footer {
     width: 100%;
     height: 100px;
@@ -39,10 +40,11 @@
 
 .title a {
     font-family: 'Orbitron', sans-serif;
-    color: #e6007a;
+:   color: #e6007a;
     text-decoration: none;
     font-weight: lighter;
 }
+
 
 .title a:hover,
 .title a:focus,

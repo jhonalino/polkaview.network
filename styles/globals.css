@@ -28,3 +28,16 @@ a {
     letter-spacing: 2px;
 
 }
+
+
+.switch-network-link {
+    color: white;
+}
+
+.text-ksm {
+    color: #FF8F00 !important;
+}
+
+.text-dot {
+    color: #e6007a !important;
+}

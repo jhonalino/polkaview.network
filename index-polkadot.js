@@ -85,6 +85,7 @@ let lowestMinNominator = "no one";
         const validatorOwnStake = validatorStake['own'].toString() / DOT_DECIMAL_PLACES
         const validatorNominators = validatorStake['others'].toJSON()
 
+
         check(currentValidators[i].toString(), parseInt(validatorTotalStake), parseInt(validatorCommissionRate['commission'].toString()))
 
         console.log(`Stash Address: ${currentValidators[i].toString()}.\n\tTotal stake: ${validatorTotalStake}\n\tSelf stake: ${validatorOwnStake} ${getSuffix()}`)
@@ -184,17 +185,29 @@ let lowestMinNominator = "no one";
     console.log(`Average Commission (Among Non 100% Commission Validators): ${averageCommissionNon100} %`)
 
 
-    var _lowestNominatedStake = `${lowestMinStake / DOT_DECIMAL_PLACES}`;
-    console.log(`Lowest Nominated Stake ${_lowestNominatedStake}` );
-    client.set("lowestMinStake", _lowestNominatedStake , redis.print);
+    var nominationLowest = {
+        totalStake: (lowestMinStake / DOT_DECIMAL_PLACES),
+        nominator: lowestMinNominator
+    };
 
-    var _highestStakedValidator = highestAmount;
-    console.log("highestStakedValidator", _highestStakedValidator );
-    client.set("highestStakedValidator", _highestStakedValidator , redis.print);
+    var validatorHighest = {
+        totalStake: highestAmount,
+        validator: highest,
+    };
 
-    var _lowestStakedValidator = lowestNonZeroAmount;
-    console.log("lowestStakedValidator", _lowestStakedValidator );
-    client.set("lowestStakedValidator", _lowestStakedValidator, redis.print);
+    var validatorLowest = {
+        totalStake: lowestNonZeroAmount,
+        validator: lowestNonZeroValidator
+    };
+
+    client.set(`nominationLowest.totalStake.${getSuffix()}`, nominationLowest.totalStake, redis.print);
+    client.set(`nominationLowest.nominator.${getSuffix()}`, nominationLowest.nominator, redis.print);
+
+    client.set(`validatorHighest.totalStake.${getSuffix()}`, validatorHighest.totalStake, redis.print);
+    client.set(`validatorHighest.validator.${getSuffix()}`, validatorHighest.validator, redis.print);
+
+    client.set(`validatorLowest.totalStake.${getSuffix()}`, validatorLowest.totalStake, redis.print);
+    client.set(`validatorLowest.validator.${getSuffix()}`, validatorLowest.validator, redis.print);
 
     process.exit()
 })()
