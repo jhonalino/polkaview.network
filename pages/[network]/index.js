@@ -84,7 +84,8 @@ export default function Home(props) {
                     suffix={props.suffix} suffixFull={props.suffixFull}
                 />
 
-                <div>
+                <div className="links-list">
+
 
                     <Link href={props.suffix === 'DOT' ? '/ksm' : '/dot' }>
                         <a className={`text-${props.suffix === 'DOT' ? 'ksm' : 'dot'} switch-network-link`}>
@@ -92,11 +93,17 @@ export default function Home(props) {
                         </a>
                     </Link>
 
-                    <a style={{color:'white', marginTop: '10px', marginLeft: '10px' }} target="_blank" href="https://github.com/jhonalino/polkaview.network">
+                    <Link href={`/api/v0${props.suffix === 'DOT' ? '/ksm' : '/dot'}` }>
+                        <a className={`text-${props.suffix === 'DOT' ? 'ksm' : 'dot'} switch-network-link`}>
+                            <span className="text-gray">or check it out as</span> json
+                        </a>
+                    </Link>
 
-                        <img style={{ width: '25px' }}src="/github.png"/>
-
-                    </a>
+                    <Link href={`https://github.com/jhonalino/polkaview.network` }>
+                        <a className={`text-${props.suffix === 'DOT' ? 'ksm' : 'dot'} switch-network-link`}>
+                            <span className="text-gray">source code? here you go from</span> github
+                        </a>
+                    </Link>
 
                 </div>
             </main>

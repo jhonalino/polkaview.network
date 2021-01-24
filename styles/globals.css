@@ -32,6 +32,8 @@ a {
 
 .switch-network-link {
     color: white;
+    margin-top: 1em;
+    text-align: right;
 }
 
 .text-ksm {
@@ -40,4 +42,15 @@ a {
 
 .text-dot {
     color: #e6007a !important;
+}
+
+
+.links-list {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.text-gray {
+    color: #9e9e9e;
 }
