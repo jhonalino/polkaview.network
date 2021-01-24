@@ -59,7 +59,7 @@
 }
 
 
-@media (min-width: 465px) {
+@media (min-width: 665px) {
 
     .title {
         font-size: 2rem;
@@ -67,7 +67,7 @@
 
 }
 
-@media (min-width: 720px) {
+@media (min-width: 820px) {
 
     .title {
         font-size: 3rem;
