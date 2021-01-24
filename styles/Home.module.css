@@ -40,7 +40,7 @@
 
 .title a {
     font-family: 'Orbitron', sans-serif;
-:   color: #e6007a;
+    color: #e6007a;
     text-decoration: none;
     font-weight: lighter;
 }
@@ -54,12 +54,20 @@
 .title {
     margin: 0;
     line-height: 1.15;
-    font-size: 2rem;
+    font-size: 1rem;
     text-align: left;
 }
 
 
-@media (min-width: 366px) {
+@media (min-width: 465px) {
+
+    .title {
+        font-size: 2rem;
+    }
+
+}
+
+@media (min-width: 720px) {
 
     .title {
         font-size: 3rem;
