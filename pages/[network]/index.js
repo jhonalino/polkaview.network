@@ -1,6 +1,4 @@
 import Head from 'next/head'
-import styles from '../../styles/Home.module.css'
-import NumberFormat from 'react-number-format';
 import CountUp from 'react-countup';
 import Link from 'next/link';
 
@@ -10,15 +8,10 @@ const { promisify } = require("util");
 
 const getAsync = promisify(client.get).bind(client);
 
-
 const StatDisplay = function( props ) {
 
     return (
-        <div className="stat-display">
-
-            <p className={styles.description}>
-                <span className="is-white "> { props.title } </span> { props.label }
-            </p>
+        <div className="mb-10">
 
             <CountUp
                 start={ 0 }
@@ -30,14 +23,27 @@ const StatDisplay = function( props ) {
                 prefix={ props.prefix || "" }
             >
                 {({ countUpRef, start }) => (
-                    <h1 className={`${styles.title} }`} >
-                        <a target="_blank" href={`https://polkascan.io/${props.suffixFull}/account/${props.address}`} >
+                    <h1 className="">
+                        <div className="text-right text-xl md:text-3xl lg:text-5xl font-secondary tracking-wider" >
                             <span className={`text-${props.suffix.toLowerCase()} letter-spacing-md`} ref={countUpRef}></span> 
                             <span className={`text-${props.suffix.toLowerCase()}`}> {props.suffix}</span>
-                        </a>
+                        </div>
                     </h1>
                 )}
             </CountUp>
+
+            <p className="text-gray-500 text-right">
+                <span className="text-white"> { props.title } </span> { props.label }
+            </p>
+
+            <p className="text-right">
+                <a className="text-blue-500" target="_blank" href={`https://polkascan.io/${props.suffixFull}/account/${props.address}`}>
+                    <span className="mr-1">polkascan</span> 
+                    <svg className="inline" width="16px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                </a>
+            </p>
 
         </div>
     );
@@ -46,12 +52,12 @@ const StatDisplay = function( props ) {
 }
 
 export default function Home(props) {
-    console.log(props);
 
-    var text = `~${ props.nominationLowest.totalStake } ${props.suffix} min stake | Polkaview`;
+    var text = `${ props.nominationLowest.totalStake } ${props.suffix} min stake | Polkaview`;
 
     return (
-        <div className={`${styles.container} network-${props.suffix}`}>
+        <div className="w-full flex justify-center">
+
             <Head>
                 <title>{ text }</title>
                 <link rel="icon" href="/favicon.ico" />
@@ -63,50 +69,58 @@ export default function Home(props) {
                 <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Raleway&display=swap" rel="stylesheet"/>
             </Head>
 
-            <main className={styles.main}>
-                
-                <StatDisplay address={ props.nominationLowest.nominator }
-                    val={ props.nominationLowest.totalStake } 
-                    title="minimum staked" label=" to get rewards" 
-                    decimals={10} suffix={props.suffix} suffixFull={props.suffixFull}
-                />
+            <div className="w-full max-w-screen-xl min-h-screen">
 
-                <StatDisplay address={ props.validatorLowest.validator }
-                    val={ props.validatorLowest.totalStake } 
-                    title="minimum staked validator" label=" backings"
-                    suffix={props.suffix} suffixFull={props.suffixFull}
+                <header className="flex justify-start p-4">
+                    <img src="/polkaview-logo.png" className="w-56" /> 
+                </header>
 
-                />
+                <div className="flex justify-center content-area items-center">
+                    <main className="p-6 w-full">
 
-                <StatDisplay address={ props.validatorHighest.validator }
-                    val={ props.validatorHighest.totalStake } 
-                    title="highest staked validator" label=" backings"
-                    suffix={props.suffix} suffixFull={props.suffixFull}
-                />
+                        <StatDisplay address={props.nominationLowest.nominator}
+                            val={props.nominationLowest.totalStake}
+                            title="minimum staked" label=" to get rewards"
+                            decimals={10} suffix={props.suffix} suffixFull={props.suffixFull}
+                        />
 
-                <div className="links-list">
+                        <StatDisplay address={props.validatorLowest.validator}
+                            val={props.validatorLowest.totalStake}
+                            title="minimum staked validator" label=" backings"
+                            suffix={props.suffix} suffixFull={props.suffixFull}
 
+                        />
 
-                    <Link href={props.suffix === 'DOT' ? '/ksm' : '/dot' } >
-                        <a className={`text-${props.suffix === 'DOT' ? 'ksm' : 'dot'} switch-network-link`} >
-                            <span className="is-white">switch to </span> { props.suffix === 'DOT' ? 'kusama' : 'polkadot' }
-                        </a>
-                    </Link>
+                        <StatDisplay address={props.validatorHighest.validator}
+                            val={props.validatorHighest.totalStake}
+                            title="highest staked validator" label=" backings"
+                            suffix={props.suffix} suffixFull={props.suffixFull}
+                        />
 
-                    <Link href={`/api/v0${props.suffix === 'DOT' ? '/dot' : '/ksm'}` } > 
-                        <a className={`text-${props.suffix === 'DOT' ? 'dot' : 'ksm'} switch-network-link`} target="_blank">
-                            <span className="text-gray">or check it out as</span> json
-                        </a>
-                    </Link>
+                        <div className="flex flex-col mt-20">
 
-                    <Link href={`https://github.com/jhonalino/polkaview.network` } >
-                        <a className={`text-${props.suffix === 'DOT' ? 'dot' : 'ksm'} switch-network-link`} target="_blank">
-                            <span className="text-gray">source code? here you go from</span> github
-                        </a>
-                    </Link>
+                            <Link href={`/api/v0${props.suffix === 'DOT' ? '/dot' : '/ksm'}`} >
+                                <a className={`text-${props.suffix === 'DOT' ? 'dot' : 'ksm'} mb-2 text-right`} >
+                                    <span className="text-gray-500">check it out as</span> json
+                                </a>
+                            </Link>
 
+                            <Link href={props.suffix === 'DOT' ? '/ksm' : '/dot'} >
+                                <a className={`text-${props.suffix === 'DOT' ? 'ksm' : 'dot'} mb-2 text-right`} >
+                                    <span className="text-gray-500">or switch to </span> {props.suffix === 'DOT' ? 'kusama' : 'polkadot'}
+                                </a>
+                            </Link>
+
+                            <Link href={`https://github.com/jhonalino/polkaview.network`} >
+                                <a className={`text-${props.suffix === 'DOT' ? 'dot' : 'ksm'} mb-2 text-right`} >
+                                    <span className="text-gray-500">view source code from</span> github
+                                </a>
+                            </Link>
+
+                        </div>
+                    </main>
                 </div>
-            </main>
+            </div>
 
         </div>
     )

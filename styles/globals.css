@@ -1,56 +1,15 @@
-html,
-body {
-    padding: 0;
-    margin: 0;
-    font-family: 'Raleway', sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,body {
     background: black;
 }
 
-a {
-    color: inherit;
-    text-decoration: none;
+body {
+    font-family: Raleway,sans-serif;
 }
 
-* {
-    box-sizing: border-box;
-}
-
-.stat-display {
-    margin-bottom: 32px;
-}
-
-.is-white {
-    color: white;
-}
-
-.letter-spacing-md {
-
-    letter-spacing: 2px;
-
-}
-
-
-.switch-network-link {
-    color: white;
-    margin-top: 1em;
-    text-align: right;
-}
-
-.text-ksm {
-    color: #FF8F00 !important;
-}
-
-.text-dot {
-    color: #e6007a !important;
-}
-
-
-.links-list {
-    display: flex;
-    flex-direction: column;
-}
-
-
-.text-gray {
-    color: #9e9e9e;
+.content-area {
+    min-height: calc(100vh - 79px);
 }
