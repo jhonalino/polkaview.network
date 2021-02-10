@@ -29,60 +29,6 @@ function connectToNetwork(args) {
 
 }
 
-function getMinMaxNominators(nominators) {
-
-    let minNominator = null;
-    let maxNominator = null;
-
-    for (let j = 0; j < nominators.length; j++) {
-
-        let currentNominator = nominators[j];
-
-        if (!minNominator) {
-
-            minNominator = maxNominator = currentNominator;
-
-        } else {
-
-            if (currentNominator?.value >= maxNominator?.value) {
-                maxNominator = currentNominator;
-            }
-
-            if (currentNominator?.value <= minNominator?.value) {
-                minNominator = currentNominator;
-            }
-        }
-
-
-    }
-
-
-    return { minNominator, maxNominator };
-
-}
-
-function nominatorMin(a, b) {
-
-    if (!a?.value && !b?.value) {
-        return null;
-    }
-
-    if (a?.value <= b?.value) {
-        return a;
-    }
-
-    if (b?.value <= a?.value) {
-        return b;
-    }
-
-}
-
-
-function nominatorMax(a, b) {
-
-    return nominatorMin(b, a)
-
-}
 
 (async () => {
 
@@ -102,7 +48,7 @@ function nominatorMax(a, b) {
 
     var currentEraIndex = parseInt(currentEra.toString());
 
-    for (let k = 169; k < currentEraIndex; k++) {
+    for (let k = 0; k <= currentEraIndex; k++) {
 
         for (let i = 0; i < currentValidators.length; i++) {
 
@@ -113,19 +59,25 @@ function nominatorMax(a, b) {
 
             const validatorNominators = validatorStake['others'].toJSON();
 
+            var lowestMinNominatorInThisValidator = validatorNominators.reduce(function(acc, nominator) {
 
-            const { minNominator, maxNominator } = getMinMaxNominators(validatorNominators);
+                if (acc === null || nominator.value <= acc.value) {
+                    return nominator;
+                } else {
+                    return acc;
+                }
 
-            lowestMinNominator = nominatorMin(minNominator, lowestMinNominator);
-            highestMinNominator = nominatorMax(maxNominator, highestMinNominator);
+            }, null);
+
+            if (lowestMinNominator === null) {
+                lowestMinNominator = lowestMinNominatorInThisValidator;
+            } else if (lowestMinNominatorInThisValidator.value <= lowestMinNominator.value) {
+                lowestMinNominator = lowestMinNominatorInThisValidator;
+            }
 
         }
 
-        if (lowestMinNominator) {
-            console.log('era', k, lowestMinNominator.value);
-        } else {
-            console.log('era', k, 'no minimun nominator');
-        }
+        console.log(k, 'lowest min nominator', lowestMinNominator.value);
     }
 
 
