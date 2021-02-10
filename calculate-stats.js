@@ -48,7 +48,7 @@ function connectToNetwork(args) {
 
     var currentEraIndex = parseInt(currentEra.toString());
 
-    for (let k = 0; k <= currentEraIndex; k++) {
+    for (let k = 169; k <= currentEraIndex; k++) {
 
         for (let i = 0; i < currentValidators.length; i++) {
 
@@ -59,7 +59,7 @@ function connectToNetwork(args) {
 
             const validatorNominators = validatorStake['others'].toJSON();
 
-            var lowestMinNominatorInThisValidator = validatorNominators.reduce(function(acc, nominator) {
+            let lowestMinNominatorInThisValidator = validatorNominators.reduce(function(acc, nominator) {
 
                 if (acc === null || nominator.value <= acc.value) {
                     return nominator;
@@ -71,13 +71,14 @@ function connectToNetwork(args) {
 
             if (lowestMinNominator === null) {
                 lowestMinNominator = lowestMinNominatorInThisValidator;
-            } else if (lowestMinNominatorInThisValidator.value <= lowestMinNominator.value) {
+            } else if (lowestMinNominatorInThisValidator && lowestMinNominatorInThisValidator.value <= lowestMinNominator.value) {
                 lowestMinNominator = lowestMinNominatorInThisValidator;
             }
 
         }
 
-        console.log(k, 'lowest min nominator', lowestMinNominator.value);
+        console.log(k, 'lowest min nominator', lowestMinNominator && lowestMinNominator.value);
+	    lowestMinNominator = null;
     }
 
 
