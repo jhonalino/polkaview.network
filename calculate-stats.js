@@ -96,7 +96,6 @@ function nominatorMax(a, b) {
 
     const { provider, network, decimal_places } = connectToNetwork(process.argv);
 
-	console.log('connected adf');
     const api = await ApiPromise.create({provider});
 
 	console.log('connected');
@@ -109,24 +108,35 @@ function nominatorMax(a, b) {
     let lowestMinNominator = null;
     let highestMinNominator = null;
 
-    for (let i = 0; i < currentValidators.length; i++) {
+    var currentEraIndex = parseInt(currentEra.toString());
 
-        const validatorStake = await api.query.staking.erasStakers(
-		150,
-            currentValidators[i]
-        );
+    for (let k = 0; k < currentEraIndex; k++) {
 
-        const validatorNominators = validatorStake['others'].toJSON();
+        for (let i = 0; i < currentValidators.length; i++) {
+
+            const validatorStake = await api.query.staking.erasStakers(
+            k,
+                currentValidators[i]
+            );
+
+            const validatorNominators = validatorStake['others'].toJSON();
 
 
-        const { minNominator, maxNominator } = getMinMaxNominators(validatorNominators);
+            const { minNominator, maxNominator } = getMinMaxNominators(validatorNominators);
 
-        lowestMinNominator = nominatorMin(minNominator, lowestMinNominator);
-        highestMinNominator = nominatorMax(maxNominator, highestMinNominator);
+            lowestMinNominator = nominatorMin(minNominator, lowestMinNominator);
+            highestMinNominator = nominatorMax(maxNominator, highestMinNominator);
 
+        }
+
+        if (lowestMinNominator) {
+            console.log('era', k, lowestMinNominator.value);
+        } else {
+            console.log('era', k, 'no minimun nominator');
+        }
     }
 
-    console.log('min', lowestMinNominator.value);
+
 
     process.exit();
 
