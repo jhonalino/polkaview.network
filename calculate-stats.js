@@ -8,9 +8,11 @@ client.on('error', function (error) {
 
 function connectToNetwork(args) {
 
+	console.log('connecting');
+
     let provider,
         network = 'polkadot',
-        rpc = 'wss://rpc.polkadot.io',
+        rpc = 'ws://localhost:9944',
         decimal_places = 10000000000;
 
     if (args.length > 2 && args[2] === 'kusama') {
@@ -94,7 +96,10 @@ function nominatorMax(a, b) {
 
     const { provider, network, decimal_places } = connectToNetwork(process.argv);
 
+	console.log('connected adf');
     const api = await ApiPromise.create({provider});
+
+	console.log('connected');
 
     const [currentValidators, currentEra] = await Promise.all([
         api.query.session.validators(),
@@ -104,14 +109,10 @@ function nominatorMax(a, b) {
     let lowestMinNominator = null;
     let highestMinNominator = null;
 
-
     for (let i = 0; i < currentValidators.length; i++) {
 
-
-        console.log(currentEra.toString());
-
         const validatorStake = await api.query.staking.erasStakers(
-            2,
+		150,
             currentValidators[i]
         );
 
