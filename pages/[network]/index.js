@@ -86,8 +86,8 @@ export default function Home(props) {
                 datasets: [{
                     label: 'minimum staked',
                     borderColor: '#e6007a',
-                    pointBorderColor: '#fff',
-                    pointBackgroundColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#fff',
                     data: data.nominationLowestList.map(a => parseInt(a.stake))
                 }]
             },
