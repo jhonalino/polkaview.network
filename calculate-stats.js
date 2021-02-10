@@ -77,7 +77,12 @@ function connectToNetwork(args) {
 
         }
 
-        console.log(k, 'lowest min nominator', lowestMinNominator && lowestMinNominator.value);
+
+        const lowestMinNominatorStake = lowestMinNominator ? lowestMinNominator.value / decimal_places : 0;
+        const lowestMinNominatorWho = lowestMinNominator ? lowestMinNominator.who : undefined;
+
+        console.log(lowestMinNominatorStake);
+        //client.set(`era_${}_nominationLowest.totalStake`, lowestMinNominator && lowestMinNominator.value);
 	    lowestMinNominator = null;
     }
 
