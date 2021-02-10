@@ -82,8 +82,12 @@ function connectToNetwork(args) {
         const lowestMinNominatorWho = lowestMinNominator ? lowestMinNominator.who : undefined;
 
         console.log(lowestMinNominatorStake);
-        //client.set(`era_${}_nominationLowest.totalStake`, lowestMinNominator && lowestMinNominator.value);
+
+        client.set(`era_${k}_nominationLowest.stake`, lowestMinNominatorStake, redis.print);
+        client.set(`era_${k}_nominationLowest.who`, lowestMinNominatorWho, redis.print);
+
 	    lowestMinNominator = null;
+
     }
 
 
