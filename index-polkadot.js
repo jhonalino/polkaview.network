@@ -209,7 +209,15 @@ let lowestMinNominator = "no one";
     client.set(`validatorLowest.totalStake.${getSuffix()}`, validatorLowest.totalStake, redis.print);
     client.set(`validatorLowest.validator.${getSuffix()}`, validatorLowest.validator, redis.print);
 
+
+    var currentEraIndex = parseInt(currentEra.toString());
+
+
+    client.set(`era_${currentEraIndex}_nominationLowest.stake`, nominationLowest.totalStake, redis.print);
+    client.set(`era_${currentEraIndex}_nominationLowest.who`, nominationLowest.nominator, redis.print);
+
     process.exit()
+
 })()
 
 
