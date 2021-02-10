@@ -44,16 +44,18 @@ function getMinMaxNominators(nominators) {
 
         } else {
 
-            if (currentNominator.value >= maxNominator.value) {
+            if (currentNominator?.value >= maxNominator?.value) {
                 maxNominator = currentNominator;
             }
 
-            if (currentNominator.value <= minNominator.value) {
+            if (currentNominator?.value <= minNominator?.value) {
                 minNominator = currentNominator;
             }
         }
 
+
     }
+
 
     return { minNominator, maxNominator };
 
@@ -61,25 +63,15 @@ function getMinMaxNominators(nominators) {
 
 function nominatorMin(a, b) {
 
-    if (!a && !b) {
+    if (!a?.value && !b?.value) {
         return null;
     }
 
-    if (!a) {
-        a = b;
+    if (a?.value <= b?.value) {
         return a;
     }
 
-    if (!b) {
-        b = a;
-        return b;
-    }
-
-    if (a.value <= b.value) {
-        return a;
-    }
-
-    if (b.value <= a.value) {
+    if (b?.value <= a?.value) {
         return b;
     }
 
@@ -110,7 +102,7 @@ function nominatorMax(a, b) {
 
     var currentEraIndex = parseInt(currentEra.toString());
 
-    for (let k = 0; k < currentEraIndex; k++) {
+    for (let k = 169; k < currentEraIndex; k++) {
 
         for (let i = 0; i < currentValidators.length; i++) {
 
