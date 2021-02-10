@@ -1,6 +1,10 @@
 import Head from 'next/head'
+import useSWR from 'swr'
 import CountUp from 'react-countup';
 import Link from 'next/link';
+import Chart from 'chart.js';
+import { useRef, useEffect } from 'react';
+import axios from 'axios';
 
 const redis = require('redis');
 const client = redis.createClient();
@@ -8,6 +12,7 @@ const { promisify } = require("util");
 
 const getAsync = promisify(client.get).bind(client);
 
+const fetcher = url => axios.get(url).then(res => res.data)
 const StatDisplay = function( props ) {
 
     return (
@@ -55,6 +60,61 @@ export default function Home(props) {
 
     var text = `${ props.nominationLowest.totalStake } ${props.suffix} min stake | Polkaview`;
 
+
+    const { data, error } = useSWR('/api/v0/dot/stats', fetcher)
+
+    var canvasRef = useRef(null);
+
+    useEffect(() => {
+
+        if (!data || props.suffix != `DOT`) {
+            return
+        }
+
+        console.log('data', data);
+
+        var canvas = canvasRef.current;
+        var ctx = canvas.getContext('2d');
+
+        const chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: data.nominationLowestList.map(a => 'Era ' + a.i),
+                datasets: [{
+                    label: 'minimum staked',
+                    borderColor: '#e6007a',
+                    pointBorderColor: '#fff',
+                    pointBackgroundColor: '#fff',
+                    data: data.nominationLowestList.map(a => parseInt(a.stake))
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Era'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Minimum Staked'
+                        }
+                    }]
+                }
+            }
+        });
+
+    }, [data, props.suffix])
+
     return (
         <div className="w-full flex justify-center">
 
@@ -75,7 +135,7 @@ export default function Home(props) {
                     <img src="/polkaview-logo.png" className="w-56" /> 
                 </header>
 
-                <div className="flex justify-center content-area items-center">
+                <div className="flex justify-center content-area">
                     <main className="p-6 w-full">
 
                         <StatDisplay address={props.nominationLowest.nominator}
@@ -118,6 +178,19 @@ export default function Home(props) {
                             </Link>
 
                         </div>
+
+                        {props.suffix === 'DOT' && (
+                            <div className=""
+                                style={{
+                                    position: 'relative',
+                                    height: '400px',
+                                    width: '100%'
+                                }}>
+                                <canvas ref={canvasRef}></canvas>
+                            </div>
+                        )}
+
+
                     </main>
                 </div>
             </div>

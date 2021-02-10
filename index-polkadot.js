@@ -215,6 +215,7 @@ let lowestMinNominator = "no one";
 
     client.set(`era_${currentEraIndex}_nominationLowest.stake`, nominationLowest.totalStake, redis.print);
     client.set(`era_${currentEraIndex}_nominationLowest.who`, nominationLowest.nominator, redis.print);
+    client.set(`currentEra`, currentEraIndex, redis.print); 
 
     process.exit()
 
