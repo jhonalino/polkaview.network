@@ -212,10 +212,12 @@ let lowestMinNominator = "no one";
 
     var currentEraIndex = parseInt(currentEra.toString());
 
+    if (network === 'polkadot') {
+        client.set(`era_${currentEraIndex}_nominationLowest.stake`, nominationLowest.totalStake, redis.print);
+        client.set(`era_${currentEraIndex}_nominationLowest.who`, nominationLowest.nominator, redis.print);
+        client.set(`currentEra`, currentEraIndex, redis.print); 
+    }
 
-    client.set(`era_${currentEraIndex}_nominationLowest.stake`, nominationLowest.totalStake, redis.print);
-    client.set(`era_${currentEraIndex}_nominationLowest.who`, nominationLowest.nominator, redis.print);
-    client.set(`currentEra`, currentEraIndex, redis.print); 
 
     process.exit()
 
