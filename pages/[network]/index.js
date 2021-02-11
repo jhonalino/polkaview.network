@@ -13,6 +13,7 @@ const { promisify } = require("util");
 const getAsync = promisify(client.get).bind(client);
 
 const fetcher = url => axios.get(url).then(res => res.data)
+
 const StatDisplay = function( props ) {
 
     return (
@@ -84,7 +85,7 @@ export default function Home(props) {
             data: {
                 labels: data.nominationLowestList.map(a => 'Era ' + a.i),
                 datasets: [{
-                    label: 'minimum staked',
+                    label: 'Minimum staked to get rewards',
                     borderColor: '#e6007a',
                     pointHoverBackgroundColor: '#fff',
                     pointHoverBorderColor: '#fff',
@@ -94,6 +95,11 @@ export default function Home(props) {
 
             // Configuration options go here
             options: {
+                tooltips: {
+                    position: 'nearest',
+                    mode: 'index',
+                    intersect: false,
+                },
                 scales: {
                     xAxes: [{
                         display: true,
@@ -104,9 +110,10 @@ export default function Home(props) {
                     }],
                     yAxes: [{
                         display: true,
+                        position: 'right',
                         scaleLabel: {
                             display: true,
-                            labelString: 'Minimum Staked'
+                            labelString: 'Minimum Staked to get rewards'
                         }
                     }]
                 }
