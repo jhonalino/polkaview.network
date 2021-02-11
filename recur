@@ -1,5 +1,5 @@
 #! /bin/bash
 
-/usr/bin/node /var/www/polkaview.network/index-polkadot.js kusama > /var/www/polkaview.network/output.log 2>/var/www/polkaview.network/error.log
+#/usr/bin/node /var/www/polkaview.network/index-polkadot.js kusama > /var/www/polkaview.network/output.log 2>/var/www/polkaview.network/error.log
 /usr/bin/node /var/www/polkaview.network/index-polkadot.js > /var/www/polkaview.network/output.log 2>/var/www/polkaview.network/error.log
 /usr/bin/pm2 restart polkaview
