@@ -44,7 +44,8 @@ let lowestMinNominator = "no one";
     }
     else { // default to polkadot
         console.log('Connecting to Polkadot')
-        provider = new WsProvider('wss://rpc.polkadot.io')
+        //provider = new WsProvider('wss://rpc.polkadot.io')
+        provider = new WsProvider('ws://localhost:9944')
     }
     const api = await ApiPromise.create({ provider })
     const [currentValidators, totalIssuance, currentEra] = await Promise.all([
