@@ -46,7 +46,7 @@ function connectToNetwork(args) {
 
     var currentEraIndex = parseInt(currentEra.toString());
 
-    for (let k = currentEraIndex - 10; k <= currentEraIndex; k++) {
+    for (let k = 169; k <= currentEraIndex; k++) {
 
         var allNominatorsThisEra = {};
 
@@ -83,14 +83,17 @@ function connectToNetwork(args) {
             if (lowestMinNominator === null || lowestMinNominator.totalStake >= totalNominated) {
                 lowestMinNominator = {
                     who: item,
-                    totalStake: totalNominated / decimal_places
+                    totalStake: totalNominated 
                 }
             }
 
         }
 
-        client.set(`era_${k}_nominationLowest.stake`, lowestMinNominator.totalStake, redis.print);
-        client.set(`era_${k}_nominationLowest.who`, lowestMinNominator.who, redis.print);
+
+	    if (lowestMinNominator) {
+		client.set(`era_${k}_nominationLowest.stake`, lowestMinNominator.totalStake/ decimal_places, redis.print);
+		client.set(`era_${k}_nominationLowest.who`, lowestMinNominator.who, redis.print);
+	    }
 
         lowestMinNominator = null;
 
