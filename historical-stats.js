@@ -1,10 +1,7 @@
 const {ApiPromise, WsProvider} = require('@polkadot/api');
 const redis = require('redis');
-const client = redis.createClient();
 
-client.on('error', function (error) {
-    console.error(error);
-});
+const { client } = require('./redis');
 
 function connectToNetwork(args) {
 

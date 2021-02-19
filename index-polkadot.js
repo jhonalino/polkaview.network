@@ -3,11 +3,7 @@ const { isHex } = require('@polkadot/util')
 const lowdb = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 const redis = require('redis');
-const client = redis.createClient();
-
-client.on('error', function(error) {
-    console.error(error);
-});
+const { client } = require('./redis');
 
 let DOT_DECIMAL_PLACES = 10000000000;
 let lowest = "no one";

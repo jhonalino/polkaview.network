@@ -1,10 +1,7 @@
 const {ApiPromise, WsProvider} = require('@polkadot/api');
 const redis = require('redis');
-const client = redis.createClient();
 
-client.on('error', function (error) {
-    console.error(error);
-});
+const { client } = require('./redis');
 
 function connectToNetwork(args) {
 
@@ -91,6 +88,7 @@ function connectToNetwork(args) {
 
 
 	    if (lowestMinNominator) {
+            console.log(lowestMinNominator);
 		    client.set(`era_${k}_nominationLowest.stake`, lowestMinNominator.totalStake/ decimal_places, redis.print);
 		    client.set(`era_${k}_nominationLowest.who`, lowestMinNominator.who, redis.print);
 

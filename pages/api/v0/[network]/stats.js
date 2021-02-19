@@ -1,6 +1,10 @@
 const Cors = require('cors');
 const redis = require('redis');
-const client = redis.createClient();
+//const { client } = require('../../../../redis');
+const client = redis.createClient({
+    host: 'redis',
+    port: 6379
+});
 const {promisify} = require("util");
 import initMiddleware from "../../../../lib/init-middleware";
 

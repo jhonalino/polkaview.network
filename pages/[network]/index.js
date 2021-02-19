@@ -6,8 +6,12 @@ import Chart from 'chart.js';
 import { useRef, useEffect } from 'react';
 import axios from 'axios';
 
+let a = 1;
 const redis = require('redis');
-const client = redis.createClient();
+const client = redis.createClient({
+    host: 'redis',
+    port: 6379
+});
 const { promisify } = require("util");
 
 const getAsync = promisify(client.get).bind(client);
@@ -145,6 +149,9 @@ export default function Home(props) {
                 <div className="flex justify-center content-area">
                     <main className="p-6 w-full">
 
+                        <h1 className="text-white">
+                            {props.a}
+                        </h1>
                         <StatDisplay address={props.nominationLowest.nominator}
                             val={props.nominationLowest.totalStake}
                             title="minimum staked" label=" to get rewards"
@@ -246,6 +253,7 @@ export async function getServerSideProps(context) {
     validatorLowest.totalStake = parseFloat(await getAsync(`validatorLowest.totalStake.${getSuffix()}`));
     validatorLowest.validator = await getAsync(`validatorLowest.validator.${getSuffix()}`);
 
+    a++;
     return {
         props: { 
             nominationLowest,
@@ -253,6 +261,7 @@ export async function getServerSideProps(context) {
             validatorLowest,
             suffix: getSuffix(),
             suffixFull,
+            a
         },
     }
 
