@@ -6,12 +6,13 @@ import Chart from 'chart.js';
 import { useRef, useEffect } from 'react';
 import axios from 'axios';
 
-let a = 1;
 const redis = require('redis');
+
 const client = redis.createClient({
     host: 'redis',
     port: 6379
 });
+
 const { promisify } = require("util");
 
 const getAsync = promisify(client.get).bind(client);
@@ -253,15 +254,13 @@ export async function getServerSideProps(context) {
     validatorLowest.totalStake = parseFloat(await getAsync(`validatorLowest.totalStake.${getSuffix()}`));
     validatorLowest.validator = await getAsync(`validatorLowest.validator.${getSuffix()}`);
 
-    a++;
     return {
         props: { 
             nominationLowest,
             validatorHighest,
             validatorLowest,
             suffix: getSuffix(),
-            suffixFull,
-            a
+            suffixFull
         },
     }
 
