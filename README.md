@@ -2,7 +2,7 @@
 ## https://polkaview.network/dot
 ## https://polkaview.network/ksm
 
-#not accepting pull request for now
+# not accepting pull request for now
  this is still in development and a lot of moving parts I'm still figuring out, so anything can and will change
  and as I'm doing this on the side. I won't have enough time to review and test pull request. 
  I will open it up once its stable
