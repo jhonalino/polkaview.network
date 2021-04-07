@@ -11,7 +11,7 @@ that said here is my to do list
 
 - learn rust (mainly a JS dev)
 - learn substrate.dev
-- provider validators/nominators info
+- provide validators/nominators info
 - learn the parachains/parathreads and how it works. then provide helpful info 
 
 will display them on these domains wherever context they fit
