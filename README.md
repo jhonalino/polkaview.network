@@ -16,10 +16,10 @@ that said here is my to do list
 
 will display them on these domains wherever context they fit
 
-https://parachains.network - parachains stuff 
-https://parathreads.network - parathreads stuff
-https://kusamaview.network - kusama stuff
-https://polkaview.network - polkaview stuff 
+- https://parachains.network - parachains stuff 
+- https://parathreads.network - parathreads stuff
+- https://kusamaview.network - kusama stuff
+- https://polkaview.network - polkaview stuff 
 
 
 
