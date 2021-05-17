@@ -3,6 +3,11 @@ services:
   redis:
     image: redis:6-alpine3.13
     container_name: redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data/redis:/data
   polkadot-tunnel:
     build: polkadot
     image: polkadot-tunnel:latest
@@ -17,6 +22,9 @@ services:
     image: polkaview:latest
     command: npm run dev
     container_name: polkaview
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     ports:
       - 3000:3000
     depends_on:

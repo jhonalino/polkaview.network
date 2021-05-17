@@ -5,13 +5,11 @@ import Link from 'next/link';
 import Chart from 'chart.js';
 import { useRef, useEffect } from 'react';
 import axios from 'axios';
+import redisconn from '../../redisconn';
 
 const redis = require('redis');
 
-const client = redis.createClient({
-    host: 'redis',
-    port: 6379
-});
+const client = redis.createClient(redisconn);
 
 const { promisify } = require("util");
 

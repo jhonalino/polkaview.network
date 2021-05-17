@@ -1,13 +1,12 @@
+import initMiddleware from "../../../../lib/init-middleware";
 const Cors = require('cors');
 const redis = require('redis');
-//const { client } = require('../../../../redis');
-const client = redis.createClient({
-    host: 'redis',
-    port: 6379
-});
+const redisconn = require('../../../../redisconn');
+const client = redis.createClient(redisconn);
+const JSONCache = require('redis-json');
 const {promisify} = require("util");
-import initMiddleware from "../../../../lib/init-middleware";
 
+const jsonCache = new JSONCache(client);
 const getAsync = promisify(client.get).bind(client);
 // Initialize the cors middleware
 const cors = initMiddleware(
@@ -27,56 +26,28 @@ export default async function handler(req, res) {
     }
 
 
-    var suffixFull;
 
-    if (getSuffix(req) === 'DOT') {
-        suffixFull = 'polkadot';
-    } else if (getSuffix() === 'KSM') {
-        suffixFull = 'kusama';
-    }
+    const currentEra = await getAsync(`dot:currentEra`);
 
 
-    var nominationLowestList = [];
 
-    var currentEra = await getAsync(`currentEra`);
 
-    var currentEraIndex = parseInt(currentEra);
+    const topNominators = await jsonCache.get(`dot:nominators:top:${currentEra}`);
+    const bottomNominators = await jsonCache.get(`dot:nominators:bottom:${currentEra}`);
 
-    for (var i = 0; i <= currentEraIndex; i++) {
-
-        const who = await getAsync(`era_${i}_nominationLowest.who`);
-        const stake = await getAsync(`era_${i}_nominationLowest.stake`);
-
-        if (who == null || stake == null) {
-            continue
-        }
-
-        nominationLowestList.push({
-            who,
-            stake,
-            i
-        });
-
-    }
+    const topValidators = await jsonCache.get(`dot:validators:top:${currentEra}`);
+    const bottomValidators = await jsonCache.get(`dot:validators:bottom:${currentEra}`);
 
     res.statusCode = 200;
 
     res.json({
-        nominationLowestList
+        nominationLowestList: [],
+        currentEra,
+        topNominators,
+        bottomNominators,
+        topValidators,
+        bottomValidators
     });
 
 }
 
-function getSuffix(req) {
-
-    var network = req.query.network;
-
-    network = network ? network.toUpperCase() : "DOT";
-
-    if (network === 'DOT' || network === 'KSM') {
-        return network;
-    }
-
-    return 'DOT';
-
-}

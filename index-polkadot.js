@@ -2,8 +2,10 @@ const { ApiPromise, WsProvider } = require('@polkadot/api')
 const { isHex } = require('@polkadot/util')
 const lowdb = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
+const redisconn = require('./redisconn');
 const redis = require('redis');
-const { client } = require('./redis');
+
+const client = redis.createClient(redisconn);
 
 let DOT_DECIMAL_PLACES = 10000000000;
 let lowest = "no one";
