@@ -1,0 +1,8 @@
+#!/bin/sh
+
+docker-compose -f docker-compose.yml down &&
+docker-compose -f docker-compose.yml rm
+sleep 1
+docker rmi $(docker images -f "dangling=true" -q)
+echo y | docker volume prune
+printf "\n... HAPPY CODING ...\n\e[0m"

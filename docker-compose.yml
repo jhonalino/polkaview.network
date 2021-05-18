@@ -1,10 +1,21 @@
 version: "3"
+
+networks:
+  db:
+    external: true
+
+volumes:
+  redis-data:
+
 services:
   redis:
     image: redis:6-alpine3.13
     container_name: redis
     volumes:
       - redis-data:/data
+    networks:
+      - db
+
   polkaview:
     build: .
     image: polkaview:latest
@@ -16,3 +27,6 @@ services:
       - redis
     volumes:
       - ./:/usr/src/app 
+    networks:
+      - db
+

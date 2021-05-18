@@ -1,0 +1,14 @@
+version: "3"
+
+networks:
+  db:
+    external: true
+
+services:
+  populate-db:
+    build: .
+    image: node:lts-alpine
+    container_name: populate-db
+    networks:
+      - db
+

@@ -5,11 +5,12 @@ import Link from 'next/link';
 import Chart from 'chart.js';
 import { useRef, useEffect } from 'react';
 import axios from 'axios';
-import redisconn from '../../redisconn';
 
 const redis = require('redis');
 
-const client = redis.createClient(redisconn);
+const client = redis.createClient({
+    host: 'redis'
+});
 
 const { promisify } = require("util");
 
@@ -186,15 +187,9 @@ export default function Home(props) {
 
                         <div className="flex flex-col mt-20">
 
-                            <Link href={`/api/v0${props.suffix === 'DOT' ? '/dot' : '/ksm'}`} >
-                                <a className={`text-${props.suffix === 'DOT' ? 'dot' : 'ksm'} mb-2 text-right`} >
-                                    <span className="text-gray-500">check it out as</span> json
-                                </a>
-                            </Link>
-
                             <Link href={props.suffix === 'DOT' ? '/ksm' : '/dot'} >
                                 <a className={`text-${props.suffix === 'DOT' ? 'ksm' : 'dot'} mb-2 text-right`} >
-                                    <span className="text-gray-500">or switch to </span> {props.suffix === 'DOT' ? 'kusama' : 'polkadot'}
+                                    <span className="text-gray-500">switch to </span> {props.suffix === 'DOT' ? 'kusama' : 'polkadot'}
                                 </a>
                             </Link>
 
