@@ -35,6 +35,8 @@ const async = require('async');
 
     const  provider = new WsProvider(network.wshost); 
 
+    console.log('kiko balisko', network.wshost);
+
     const api = await ApiPromise.create({provider});
 
     const [currentEra] = await Promise.all([
@@ -78,13 +80,14 @@ const async = require('async');
 
                 if (allNominators[nominator.who]) {
 
-                    console.log('====');
-                    console.log(allNominators[nominator.who]);
-                    console.log(nominator);
-                    console.log('====');
+                    // console.log('====');
+                    // console.log(allNominators[nominator.who]);
+                    // console.log(nominator);
+                    // console.log('====');
+                    //console.log('===');
 
                     allNominators[nominator.who].value = parseInt(allNominators[nominator.who].value) + parseInt(nominator.value);
-                    console.log(allNominators[nominator.who].value);
+                    //console.log(allNominators[nominator.who].value);
 
                 } else {
 
@@ -159,7 +162,7 @@ const async = require('async');
     client.set(`${suffix}:currentEra`, currentEra.toString(), redis.print);
 
     var [seconds] = process.hrtime(hrstart)
-    console.log(`total seconds`, seconds);
+    //console.log(`total seconds`, seconds);
 
     process.exit();
 

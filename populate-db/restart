@@ -6,4 +6,4 @@ docker rmi $(docker images -f "dangling=true" -q)
 docker-compose -f docker-compose.yml down &&
 docker-compose -f docker-compose.yml rm &&
 docker-compose -f docker-compose.yml build &&
-docker-compose -f docker-compose.yml up 
+docker-compose -f docker-compose.yml run -T populate-db "$@"
