@@ -1,0 +1,9 @@
+#!/bin/sh
+
+
+docker rmi $(docker images -f "dangling=true" -q)
+
+docker-compose -f docker-compose-prod.yml down &&
+docker-compose -f docker-compose-prod.yml rm &&
+docker-compose -f docker-compose-prod.yml build &&
+docker-compose -f docker-compose-prod.yml up -d 
