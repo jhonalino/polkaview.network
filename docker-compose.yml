@@ -21,6 +21,7 @@ services:
     image: polkaview:latest
     command: npm run dev
     container_name: polkaview
+    restart: always
     ports:
       - 3000:3000
     depends_on:

@@ -13,3 +13,31 @@ body {
 .content-area {
     min-height: calc(100vh - 79px);
 }
+
+
+
+@layer components {
+
+    td, th {
+        @apply text-center p-4 border  border-collapse;
+    }
+
+    table.table-dot {
+        @apply text-dot;
+    }
+
+    table.table-ksm {
+        @apply text-ksm;
+    }
+
+    table.table-dot td, 
+    table.table-dot th {
+        @apply border-dot;
+    }
+
+    table.table-ksm td, 
+    table.table-ksm th {
+        @apply border-ksm;
+    }
+
+}
