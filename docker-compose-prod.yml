@@ -33,8 +33,9 @@ services:
             - web
 
     polkaview:
-        build: .
-        dockerfile: Dockerfile-prod
+        build: 
+          context: .
+          dockerfile: Dockerfile-prod
         image: polkaview:latest
         labels:
             - traefik.enable=true
