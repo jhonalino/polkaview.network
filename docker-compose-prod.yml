@@ -33,9 +33,9 @@ services:
             - db
 
     polkaview:
-        build: 
-          context: .
-          dockerfile: Dockerfile-prod
+        build:
+            context: .
+            dockerfile: Dockerfile-prod
         image: polkaview:latest
         labels:
             - traefik.enable=true
@@ -49,7 +49,5 @@ services:
             - 3000:3000
         depends_on:
             - redis
-        volumes:
-            - ./:/usr/src/app
         networks:
             - db
