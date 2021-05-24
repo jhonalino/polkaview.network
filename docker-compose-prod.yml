@@ -1,7 +1,7 @@
 version: '3'
 
 networks:
-    web:
+    db:
         external: true
 
 volumes:
@@ -14,7 +14,7 @@ services:
         volumes:
             - redis-data:/data
         networks:
-            - web
+            - db
 
     traefik:
         container_name: traefik
@@ -30,7 +30,7 @@ services:
             - ./traefik/traefik_dynamic.toml:/traefik_dynamic.toml
             - ./traefik/acme.json:/acme.json # be sure to chmod 600 acme.json
         networks:
-            - web
+            - db
 
     polkaview:
         build: 
@@ -53,4 +53,4 @@ services:
         volumes:
             - ./:/usr/src/app
         networks:
-            - web
+            - db
