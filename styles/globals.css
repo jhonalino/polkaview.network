@@ -40,4 +40,10 @@ body {
         @apply border-ksm;
     }
 
+    :root {
+        --green1: #e6007a;
+        --green2: #e6007a;
+        --green3: #e6007a;
+    }
+
 }
