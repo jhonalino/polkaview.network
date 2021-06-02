@@ -2,12 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-html,body {
+html,
+body {
     background: black;
 }
 
 body {
-    font-family: Raleway,sans-serif;
+    font-family: Raleway, sans-serif;
 }
 
 .content-area {
@@ -18,8 +19,9 @@ body {
 
 @layer components {
 
-    td, th {
-        @apply text-center p-4 border  border-collapse;
+    td,
+    th {
+        @apply text-center p-4 border border-collapse;
     }
 
     table.table-dot {
@@ -30,12 +32,12 @@ body {
         @apply text-ksm;
     }
 
-    table.table-dot td, 
+    table.table-dot td,
     table.table-dot th {
         @apply border-dot;
     }
 
-    table.table-ksm td, 
+    table.table-ksm td,
     table.table-ksm th {
         @apply border-ksm;
     }
@@ -46,4 +48,15 @@ body {
         --green3: #e6007a;
     }
 
+    .ui--IdentityIcon circle:first-child {
+        /* fill: rgb(40, 40, 41); */
+        fill: transparent;
+    }
+
+    .identicon-container {
+        /* background: rgb(40, 40, 41); */
+        background: black;
+        height: 64px;
+        width: 64px;    
+    }
 }

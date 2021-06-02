@@ -5,10 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "export": "next build && next export"
   },
   "dependencies": {
     "@polkadot/api": "^4.10.1",
+    "@polkadot/react-identicon": "^0.78.1",
     "async": "^3.2.0",
     "autoprefixer": "^10.2.3",
     "axios": "^0.21.1",

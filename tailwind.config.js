@@ -10,7 +10,8 @@ module.exports = {
         extend: {
             colors: {
                 dot: '#e6007a',
-                ksm: '#FF8F00'
+                ksm: '#FF8F00',
+                "kinda-black": 'rgb(18 19 18 / 70%)'
             },
             fontFamily: {
                 'primary': ['Raleway', 'sans-serif'],
