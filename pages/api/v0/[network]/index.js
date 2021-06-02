@@ -113,7 +113,7 @@ export default async function handler(req, res) {
         nominationLowest,
         validatorHighest,
         validatorLowest,
-        suffix,
+        suffix: suffix.toUpperCase(),
         suffixFull,
     });
 
