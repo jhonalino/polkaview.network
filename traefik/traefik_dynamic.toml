@@ -7,7 +7,7 @@
 	]
 
 [http.routers.api]
-	rule = "Host(`monitor-polkadot-node.polkaview.network`)"
+	rule = "Host(`monitor.polkaview.network`)"
 	entrypoints = ["websecure"]
 	middlewares = ["simpleAuth"]
 	service = "api@internal"

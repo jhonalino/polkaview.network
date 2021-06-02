@@ -43,6 +43,11 @@ services:
             - traefik.http.routers.polkadot.tls=true
             - traefik.http.routers.polkadot.tls.certresolver=lets-encrypt
             - traefik.http.services.polkadot.loadbalancer.server.port=3000
+
+            - traefik.http.middlewares.polkadot.headers.accesscontrolallowmethods=GET,OPTIONS,PUT
+            - traefik.http.middlewares.polkadot.headers.accesscontrolalloworiginlist=https://polkaview.network
+            - traefik.http.middlewares.polkadot.headers.accesscontrolmaxage=100
+            - traefik.http.middlewares.polkadot.headers.addvaryheader=true
         container_name: polkaview
         restart: always
         ports:
