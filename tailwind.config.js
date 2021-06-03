@@ -1,5 +1,6 @@
 module.exports = {
     purge: {
+        layers: ['components'],
         content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
         options: {
             safelist: ['text-dot', 'text-ksm', 'table-dot', 'table-ksm', 'identicon-container', 'ui--IdentityIcon circle:first-child']
