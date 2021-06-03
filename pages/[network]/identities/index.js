@@ -210,6 +210,8 @@ export default function Index(props) {
 
     const text = props.suffixFull + ' identities | polkaview';
 
+    console.log('render');
+
     return (
         <div className="w-full flex justify-center">
 
@@ -292,7 +294,7 @@ export default function Index(props) {
                         .map(function ({ address, display, legal, isValidator, isNominator, judgements, isPrimeCouncil, isCouncil, free, reserved, isRegistrar, riot, web, twitter, email, subs }) {
                             return (
                                 <div key={address} className="text-white p-1 box-border">
-                                    <div className='w-96 h-80 flex flex-col items-start justify-start bg-kinda-black rounded-sm p-4'>
+                                    <div className='w-96 h-96 flex flex-col items-start justify-start bg-kinda-black rounded-sm p-4'>
                                         <div className="flex w-full items-center">
                                             <div className={`identicon-container border-2 ${props.suffix === 'dot' ? 'border-dot' : 'border-ksm'} rounded-full box-content p-2`}>
                                                 <Identicon
@@ -320,6 +322,7 @@ export default function Index(props) {
                                             <div className="text-md text-gray-500">
                                                 reserved: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} font-secondary`}>{reserved} </span>
                                             </div>
+                                            <div class="my-1"></div>
                                             <div className="text-md text-gray-500">
                                                 twitter: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{twitter || '-'}</span>
                                             </div>
@@ -332,12 +335,45 @@ export default function Index(props) {
                                             <div className="text-md text-gray-500">
                                                 element: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{riot || '-'}</span>
                                             </div>
+                                            <div class="my-1"></div>
                                             <div className="text-md text-gray-500">
                                                 subs count: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{subs.length}</span>
                                             </div>
+                                            <div className="text-md text-gray-500">
+                                                staking:
+                                                {isValidator && (
+                                                    <span className="text-blue-400 inline-block mx-1">
+                                                        validator
+                                                    </span>)
+                                                }
+                                                {isNominator && (
+                                                    <span className="text-purple-400 inline-block mx-1">
+                                                        nominator
+                                                    </span>)
+                                                }
+                                                {!isValidator && !isNominator && (
+                                                    <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} mx-1`}>-</span>
+                                                )}
+                                            </div>
+                                            <div className="text-md text-gray-500">
+                                                judgements:
+                                                {
+                                                    judgements.map(function ({ index, result, textColorClass }) {
+                                                        return (<span key={index} className={`${textColorClass} inline-block mx-1`}>
+                                                            {capitalCase(result).toLowerCase()}
+                                                        </span>)
+                                                    })
+                                                }
+                                                {
+                                                    judgements.length === 0 && (
+                                                        <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} mx-1`}>-</span>
+                                                    )
+                                                }
+                                            </div>
                                         </div>
+                                        <div class="my-1"></div>
                                         <div className="text-center w-full">
-                                            <div className="flex flex-wrap justify-start">
+                                            <div className="flex flex-wrap justify-start font-bold text-lg">
                                                 {isRegistrar && (
                                                     <span className="text-yellow-100 inline-block mr-1">
                                                         registrar
@@ -353,21 +389,6 @@ export default function Index(props) {
                                                         council
                                                     </span>)
                                                 }
-                                                {isValidator && (
-                                                    <span className="text-blue-400 inline-block mr-1">
-                                                        validator
-                                                    </span>)
-                                                }
-                                                {isNominator && (
-                                                    <span className="text-purple-400 inline-block mr-1">
-                                                        nominator
-                                                    </span>)
-                                                }
-                                                {judgements.map(function ({ index, result, textColorClass }) {
-                                                    return (<span key={index} className={`${textColorClass} inline-block mr-1`}>
-                                                        {capitalCase(result).toLowerCase()}
-                                                    </span>)
-                                                })}
                                             </div>
                                         </div>
                                     </div>
