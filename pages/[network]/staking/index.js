@@ -130,7 +130,7 @@ export default function Home(props) {
                             </a>
                         </Link>>
                     </div>
-                    <div>
+                    <div className="text-right flex flex-col items-end justify-end">
 
                         {props.usdPrice > 0 ? (
                             <div className={`ml-8 font-secondary text-${props.suffix}`}>

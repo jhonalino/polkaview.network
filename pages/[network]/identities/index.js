@@ -79,6 +79,28 @@ export default function Index(props) {
     const [loading, setLoading] = useState(true);
     const [loadingText, setLoadingText] = useState('loading');
 
+    // const [filterFlags, setFilterFlags] = useState({
+
+    //     registrar,
+    //     council,
+    //     validator,
+    //     nominator,
+
+    //     alphabetal
+    //     balance
+
+    //     has sub account
+
+    //     Unknown,
+    //     FeePaid(Balance),
+    //     Reasonable,
+    //     KnownGood,
+    //     OutOfDate,
+    //     LowQuality,
+    //     Erroneous,
+
+    // });
+
     useEffect(function () {
         async function fetch() {
             console.log('fetching');
@@ -208,8 +230,7 @@ export default function Index(props) {
                             </a>
                         </Link>
                     </div>
-                    <div>
-
+                    <div className="text-right flex justify-end">
                         <Link href={props.suffix === 'dot' ? '/ksm/identities' : '/dot/identities'} >
                             <a className={`text-${props.suffix === 'dot' ? 'ksm' : 'dot'} mb-2 text-right`} >
                                 <span className="text-gray-500">switch to </span> {props.suffix === 'dot' ? 'kusama' : 'polkadot'}
