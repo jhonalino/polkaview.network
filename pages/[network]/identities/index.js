@@ -79,7 +79,7 @@ export default function Index(props) {
 
     useEffect(function () {
         async function fetch() {
-
+            console.log('fetching');
             setLoading(true);
 
             setLoadingText('connecting to ' + props.suffixFull + ' blockchain');
@@ -154,6 +154,8 @@ export default function Index(props) {
     }, [props.suffix]);
 
     const text = 'identities';
+
+    console.log('rerender');
 
     return (
         <div className="w-full flex justify-center">
