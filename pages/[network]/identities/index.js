@@ -322,7 +322,7 @@ export default function Index(props) {
                                             <div className="text-md text-gray-500">
                                                 reserved: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} font-secondary`}>{reserved} </span>
                                             </div>
-                                            <div class="my-1"></div>
+                                            <div className="my-1"></div>
                                             <div className="text-md text-gray-500">
                                                 twitter: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{twitter || '-'}</span>
                                             </div>
@@ -335,7 +335,7 @@ export default function Index(props) {
                                             <div className="text-md text-gray-500">
                                                 element: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{riot || '-'}</span>
                                             </div>
-                                            <div class="my-1"></div>
+                                            <div className="my-1"></div>
                                             <div className="text-md text-gray-500">
                                                 subs count: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{subs.length}</span>
                                             </div>
@@ -371,7 +371,7 @@ export default function Index(props) {
                                                 }
                                             </div>
                                         </div>
-                                        <div class="my-1"></div>
+                                        <div className="my-1"></div>
                                         <div className="text-center w-full">
                                             <div className="flex flex-wrap justify-start font-bold text-lg uppercase">
                                                 {isRegistrar && (
