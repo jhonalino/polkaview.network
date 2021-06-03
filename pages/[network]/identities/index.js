@@ -153,7 +153,7 @@ export default function Index(props) {
 
     }, [props.suffix]);
 
-    const text = 'identities';
+    const text = props.suffixFull + ' identities | polkaview';
 
     console.log('rerender');
 
