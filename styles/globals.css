@@ -48,15 +48,17 @@ body {
         --green3: #e6007a;
     }
 
-    .ui--IdentityIcon circle:first-child {
-        /* fill: rgb(40, 40, 41); */
-        fill: transparent;
-    }
-
+  
     .identicon-container {
         /* background: rgb(40, 40, 41); */
         background: black;
         height: 64px;
         width: 64px;    
     }
+}
+
+
+.ui--IdentityIcon circle:first-child {
+    /* fill: rgb(40, 40, 41); */
+    fill: transparent;
 }
