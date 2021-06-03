@@ -5,6 +5,7 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import { hexToString } from '@polkadot/util';
 import Identicon from '@polkadot/react-identicon';
 import async from 'async';
+import { debounce } from 'lodash';
 import {
     capitalCase,
 } from "change-case";
@@ -76,6 +77,7 @@ export default function Index(props) {
 
     const [identities, setIdentities] = useState([]);
     const [searchText, setSearchText] = useState('');
+    const [delayedSearchText, setDelayedSearchText] = useState('');
     const [loading, setLoading] = useState(true);
     const [loadingText, setLoadingText] = useState('loading');
 
@@ -100,6 +102,7 @@ export default function Index(props) {
     //     Erroneous,
 
     // });
+    const _setDelayedSearchText = debounce(setDelayedSearchText, 100) 
 
     useEffect(function () {
         async function fetch() {
@@ -224,7 +227,7 @@ export default function Index(props) {
                 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Raleway&display=swap" rel="stylesheet" />
             </Head>
 
-            <div className="w-full max-w-screen-2xl min-h-screen">
+            <div className="w-full max-w-screen-3xl min-h-screen">
                 <header className="flex p-4 items-center justify-between">
                     <div className="flex items-center justify-start">
                         <Link href="/" >
@@ -243,11 +246,12 @@ export default function Index(props) {
                 </header>
 
                 {loading ? (<></>) : (
-                    <div className="flex flex-col justify-center items-center">
-                        <div className="w-full">
-                            <input type="text" className={`m-auto px-4 py-4 mb-4 text-${props.suffix === 'dot' ? 'dot' : 'ksm'} text-2xl w-full bg-kinda-black outline-none`}
+                    <div className="flex flex-col justify-center items-center w-full">
+                        <div className="w-full bg-kinda-black flex justify-center mb-4">
+                            <input type="text" className={`m-auto px-4 py-4 text-${props.suffix === 'dot' ? 'dot' : 'ksm'} text-2xl max-w-screen-2xl w-full bg-transparent outline-none`}
                                 placeholder={`search ${props.suffixFull} identities`} value={searchText} onInput={(e) => {
                                     setSearchText(e.target.value);
+                                    _setDelayedSearchText(e.target.value);
                                 }}/>
                         </div>
                     </div>
@@ -262,7 +266,7 @@ export default function Index(props) {
 
                             var legalLower = legal.toLowerCase();
                             var displayLower = display.toLowerCase();
-                            var searchLower = searchText.toLowerCase();
+                            var searchLower = delayedSearchText.toLowerCase();
 
                             return legalLower.includes(searchLower) || displayLower.includes(searchLower) || (searchText === address)
 
