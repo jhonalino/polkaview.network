@@ -57,7 +57,6 @@ const util = require('util');
     ]);
 
 
-    await client.setAsync(`${suffix}:latest.era`, latestEra.toString());
 
     let targetEra = parseInt(argv.era) >= 0 ? argv.era : latestEra.toString();
 
@@ -385,6 +384,8 @@ const util = require('util');
     })
 
 
+    //move to the end to not cause issues when loading unfinished population
+    await client.setAsync(`${suffix}:latest.era`, latestEra.toString());
 
     process.exit();
 
