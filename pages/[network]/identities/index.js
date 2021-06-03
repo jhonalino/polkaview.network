@@ -124,6 +124,9 @@ export default function Index(props) {
 
             await api.isReady;
 
+            // expose api for testing
+            window.api = api;
+
             setLoadingText('getting registrars');
 
             var registrars = await api.query.identity.registrars();
