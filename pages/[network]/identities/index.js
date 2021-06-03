@@ -75,6 +75,7 @@ function getIdentityDetails(identity) {
 export default function Index(props) {
 
     const [identities, setIdentities] = useState([]);
+    const [searchText, setSearchText] = useState('');
     const [loading, setLoading] = useState(true);
     const [loadingText, setLoadingText] = useState('loading');
 
@@ -107,9 +108,6 @@ export default function Index(props) {
 
             registrars = registrars.toHuman();
 
-            console.log('registars', registrars);
-
-
             setLoadingText('getting council members');
 
             var councilMembers = await api.query.council.members();
@@ -117,8 +115,6 @@ export default function Index(props) {
 
             var primeCouncil = await api.query.council.prime();
             primeCouncil = primeCouncil.toJSON();
-
-            console.log(primeCouncil);
 
             setLoadingText('loading ' + props.suffixFull + ' identities');
 
@@ -129,6 +125,8 @@ export default function Index(props) {
                 var details = await getIdentityDetails(identity.toJSON());
 
                 var accountDetails = await api.query.system.account(address);
+
+                const { reserved: reservedRaw, free: freeRaw } = accountDetails.toJSON().data || {}
 
                 accountDetails = accountDetails.toHuman().data || {};
 
@@ -149,6 +147,8 @@ export default function Index(props) {
                     isCouncil: councilMembers.includes(address) || subs.some(sub => councilMembers.includes(sub)),
                     isPrimeCouncil: address === primeCouncil || subs.some((sub => primeCouncil === sub)),
                     ...accountDetails,
+                    freeRaw,
+                    reservedRaw,
                     subs,
                     address,
                     ...details,
@@ -164,7 +164,7 @@ export default function Index(props) {
                     console.log(err, 'err');
                     return;
                 }
-
+                console.log(result[0]);
                 setIdentities(result);
                 setLoading(false);
             });
@@ -217,12 +217,33 @@ export default function Index(props) {
                         </Link>
                     </div>
                 </header>
+
+                {loading ? (<></>) : (
+                    <div className="flex flex-col justify-center items-center">
+                        <div className="w-full">
+                            <input type="text" className={`m-auto px-4 py-4 mb-4 text-${props.suffix === 'dot' ? 'dot' : 'ksm'} text-2xl w-full bg-kinda-black outline-none`}
+                                placeholder={`search ${props.suffixFull} identities`} value={searchText} onInput={(e) => {
+                                    setSearchText(e.target.value);
+                                }}/>
+                        </div>
+                    </div>
+                )}
                 <div className="flex flex-wrap items-center justify-center">
                     {loading ? (
                         <div className="text-gray-200">
                             {loadingText}...
                         </div>
-                    ) : (identities.map(function ({ address, display, legal, isValidator, isNominator, judgements, isPrimeCouncil, isCouncil, free, reserved, isRegistrar }) {
+                    ) : (identities
+                        .filter(function ({display, legal, address}) {
+
+                            var legalLower = legal.toLowerCase();
+                            var displayLower = display.toLowerCase();
+                            var searchLower = searchText.toLowerCase();
+
+                            return legalLower.includes(searchLower) || displayLower.includes(searchLower) || (searchText === address)
+
+                        })
+                        .map(function ({ address, display, legal, isValidator, isNominator, judgements, isPrimeCouncil, isCouncil, free, reserved, isRegistrar }) {
                         return (
                             <div key={address} className="text-white p-1 box-border">
                                 <div className='w-96 h-44 flex flex-col items-start justify-start bg-kinda-black rounded-sm p-4'>
@@ -294,7 +315,7 @@ export default function Index(props) {
                     }))}
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 
