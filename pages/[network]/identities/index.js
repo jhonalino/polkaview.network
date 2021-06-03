@@ -76,10 +76,11 @@ function getIdentityDetails(identity) {
 export default function Index(props) {
 
     const [identities, setIdentities] = useState([]);
-    const [searchText, setSearchText] = useState('');
-    const [delayedSearchText, setDelayedSearchText] = useState('');
+    const [searchText, setSearchText] = useState(props.search);
+    const [delayedSearchText, setDelayedSearchText] = useState(props.search);
     const [loading, setLoading] = useState(true);
     const [loadingText, setLoadingText] = useState('loading');
+    const [searchInputFocus, setSearchInputFocus] = useState(false);
 
     // const [filterFlags, setFilterFlags] = useState({
 
@@ -102,11 +103,10 @@ export default function Index(props) {
     //     Erroneous,
 
     // });
-    const _setDelayedSearchText = debounce(setDelayedSearchText, 100) 
+    const _setDelayedSearchText = debounce(setDelayedSearchText, 100)
 
     useEffect(function () {
         async function fetch() {
-            console.log('fetching');
             setLoading(true);
 
             setLoadingText('connecting to ' + props.suffixFull + ' blockchain');
@@ -192,7 +192,7 @@ export default function Index(props) {
                     console.log(err, 'err');
                     return;
                 }
-                console.log(result[0]);
+                console.log('result:', result[0]);
                 setIdentities(result);
                 setLoading(false);
             });
@@ -209,8 +209,6 @@ export default function Index(props) {
     }, [props.suffix]);
 
     const text = props.suffixFull + ' identities | polkaview';
-
-    console.log('rerender');
 
     return (
         <div className="w-full flex justify-center">
@@ -249,10 +247,16 @@ export default function Index(props) {
                     <div className="flex flex-col justify-center items-center w-full">
                         <div className="w-full bg-kinda-black flex justify-center mb-4">
                             <input type="text" className={`m-auto px-4 py-4 text-${props.suffix === 'dot' ? 'dot' : 'ksm'} text-2xl max-w-screen-2xl w-full bg-transparent outline-none`}
-                                placeholder={`search ${props.suffixFull} identities`} value={searchText} onInput={(e) => {
+                                onFocus={() => {
+                                    setSearchInputFocus(true);
+                                }}
+                                onBlur={() => {
+                                    setSearchInputFocus(false);
+                                }}
+                                placeholder={searchInputFocus ? `search by name or account` : `search ${props.suffixFull} identities`} value={searchText} onInput={(e) => {
                                     setSearchText(e.target.value);
                                     _setDelayedSearchText(e.target.value);
-                                }}/>
+                                }} />
                         </div>
                     </div>
                 )}
@@ -262,7 +266,7 @@ export default function Index(props) {
                             {loadingText}...
                         </div>
                     ) : (identities
-                        .filter(function ({display, legal, address}) {
+                        .filter(function ({ display, legal, address }) {
 
                             var legalLower = legal.toLowerCase();
                             var displayLower = display.toLowerCase();
@@ -271,76 +275,91 @@ export default function Index(props) {
                             return legalLower.includes(searchLower) || displayLower.includes(searchLower) || (searchText === address)
 
                         })
-                        .map(function ({ address, display, legal, isValidator, isNominator, judgements, isPrimeCouncil, isCouncil, free, reserved, isRegistrar }) {
-                        return (
-                            <div key={address} className="text-white p-1 box-border">
-                                <div className='w-96 h-44 flex flex-col items-start justify-start bg-kinda-black rounded-sm p-4'>
-                                    <div className="flex w-full items-center">
-                                        <div className={`identicon-container border-2 ${props.suffix === 'dot' ? 'border-dot' : 'border-ksm'} rounded-full box-content p-2`}>
-                                            <Identicon
-                                                value={address}
-                                                size={44}
-                                                theme={'polkadot'}
-                                            />
+                        .map(function ({ address, display, legal, isValidator, isNominator, judgements, isPrimeCouncil, isCouncil, free, reserved, isRegistrar, riot, web, twitter, email, subs }) {
+                            return (
+                                <div key={address} className="text-white p-1 box-border">
+                                    <div className='w-96 h-80 flex flex-col items-start justify-start bg-kinda-black rounded-sm p-4'>
+                                        <div className="flex w-full items-center">
+                                            <div className={`identicon-container border-2 ${props.suffix === 'dot' ? 'border-dot' : 'border-ksm'} rounded-full box-content p-2`}>
+                                                <Identicon
+                                                    value={address}
+                                                    size={44}
+                                                    theme={'polkadot'}
+                                                />
+                                            </div>
+                                            <div className="flex flex-col items-center justify-center w-full text-center">
+                                                <p className="text-gray-300">
+                                                    {display}
+                                                </p>
+                                                <p className="text-gray-400 text-sm">
+                                                    {legal}
+                                                </p>
+                                                <p className="text-gray-500 text-xs">
+                                                    {toShortAddress(address)}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col items-center justify-center w-full text-center">
-                                            <p className="text-gray-300">
-                                                {display}
-                                            </p>
-                                            <p className="text-gray-400 text-sm">
-                                                {legal}
-                                            </p>
-                                            <p className="text-gray-500 text-xs">
-                                                {toShortAddress(address)}
-                                            </p>
+                                        <div className="flex flex-col mt-4">
+                                            <div className="text-md text-gray-500">
+                                                free: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} font-secondary`}>{free} </span>
+                                            </div>
+                                            <div className="text-md text-gray-500">
+                                                reserved: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} font-secondary`}>{reserved} </span>
+                                            </div>
+                                            <div className="text-md text-gray-500">
+                                                twitter: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{twitter || '-'}</span>
+                                            </div>
+                                            <div className="text-md text-gray-500">
+                                                email: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{email || '-'}</span>
+                                            </div>
+                                            <div className="text-md text-gray-500">
+                                                web: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{web || '-'}</span>
+                                            </div>
+                                            <div className="text-md text-gray-500">
+                                                element: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{riot || '-'}</span>
+                                            </div>
+                                            <div className="text-md text-gray-500">
+                                                subs count: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{subs.length}</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="flex flex-col mt-4">
-                                        <div className="text-md text-gray-500">
-                                            free: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} font-secondary`}>{free} </span>
-                                        </div>
-                                        <div className="text-md text-gray-500">
-                                            reserved: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} font-secondary`}>{reserved} </span>
-                                        </div>
-                                    </div>
-                                    <div className="text-center w-full">
-                                        <div className="flex flex-wrap justify-start">
-                                            {isRegistrar && (
-                                                <span className="text-yellow-100 inline-block mr-1">
-                                                    registrar
-                                                </span>)
-                                            }
-                                            {isPrimeCouncil && (
-                                                <span className="text-yellow-300 inline-block mr-1">
-                                                    prime council
-                                                </span>)
-                                            }
-                                            {(isCouncil && !isPrimeCouncil) && (
-                                                <span className="text-pink-400 inline-block mr-1">
-                                                    council
-                                                </span>)
-                                            }
-                                            {isValidator && (
-                                                <span className="text-blue-400 inline-block mr-1">
-                                                    validator
-                                                </span>)
-                                            }
-                                            {isNominator && (
-                                                <span className="text-purple-400 inline-block mr-1">
-                                                    nominator
-                                                </span>)
-                                            }
-                                            {judgements.map(function ({ index, result, textColorClass }) {
-                                                return (<span key={index} className={`${textColorClass} inline-block mr-1`}>
-                                                    {capitalCase(result).toLowerCase()}
-                                                </span>)
-                                            })}
+                                        <div className="text-center w-full">
+                                            <div className="flex flex-wrap justify-start">
+                                                {isRegistrar && (
+                                                    <span className="text-yellow-100 inline-block mr-1">
+                                                        registrar
+                                                    </span>)
+                                                }
+                                                {isPrimeCouncil && (
+                                                    <span className="text-yellow-300 inline-block mr-1">
+                                                        prime council
+                                                    </span>)
+                                                }
+                                                {(isCouncil && !isPrimeCouncil) && (
+                                                    <span className="text-pink-400 inline-block mr-1">
+                                                        council
+                                                    </span>)
+                                                }
+                                                {isValidator && (
+                                                    <span className="text-blue-400 inline-block mr-1">
+                                                        validator
+                                                    </span>)
+                                                }
+                                                {isNominator && (
+                                                    <span className="text-purple-400 inline-block mr-1">
+                                                        nominator
+                                                    </span>)
+                                                }
+                                                {judgements.map(function ({ index, result, textColorClass }) {
+                                                    return (<span key={index} className={`${textColorClass} inline-block mr-1`}>
+                                                        {capitalCase(result).toLowerCase()}
+                                                    </span>)
+                                                })}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        )
-                    }))}
+                            )
+                        }))}
                 </div>
             </div>
         </div >
@@ -354,6 +373,8 @@ export async function getServerSideProps(context) {
     var network = context.query.network;
 
     network = network ? network.toLowerCase() : "dot";
+
+    var search = context.query.search || '';
 
     var suffix = '';
     if (network === 'dot' || network === 'ksm') {
@@ -374,6 +395,7 @@ export async function getServerSideProps(context) {
         props: {
             suffix,
             suffixFull,
+            search
         }
     };
 
