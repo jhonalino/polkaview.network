@@ -144,7 +144,15 @@ export default function Home(props) {
                     </div>
                 </header>
 
+                <div className="flex justify-center text-center">
+                    <Link href="/dot/identities" >
+                        <a className="text-dot underline">
+                            checkout identities beta
+                        </a>
+                    </Link>
+                </div>
                 <div className="flex justify-center">
+
                     <main className="p-6 w-full flex flex-wrap justify-center items-center">
 
                         <StatDisplay address={props.nominatorMinimum.who}
