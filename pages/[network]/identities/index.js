@@ -5,7 +5,9 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import { hexToString } from '@polkadot/util';
 import Identicon from '@polkadot/react-identicon';
 import async from 'async';
-
+import {
+    capitalCase,
+} from "change-case";
 function toShortAddress(_address) {
 
     const address = (_address || '');
@@ -127,6 +129,15 @@ export default function Index(props) {
                 var address = key.args[0].toHuman();
                 var details = await getIdentityDetails(identity.toJSON());
 
+                var accountDetails = await api.query.system.account(address);
+
+                accountDetails = accountDetails.toHuman().data || {};
+
+                var subs = await api.query.identity.subsOf(address);
+
+                //get sub accounts, excluding the balance
+                subs = subs.toJSON()[1];
+
                 var nominator = await api.query.staking.nominators(address);
                 var isNominator = !nominator.isEmpty;
 
@@ -136,6 +147,8 @@ export default function Index(props) {
                 var result = {
                     isCouncil: councilMembers.includes(address),
                     isPrimeCouncil: address === primeCouncil,
+                    ...accountDetails,
+                    subs,
                     address,
                     ...details,
                     isValidator,
@@ -208,48 +221,63 @@ export default function Index(props) {
                         <div className="text-gray-200">
                             {loadingText}...
                         </div>
-                    ) : (identities.map(function ({ address, display, legal, isValidator, isNominator, judgements, isPrimeCouncil, isCouncil }) {
+                    ) : (identities.map(function ({ address, display, legal, isValidator, isNominator, judgements, isPrimeCouncil, isCouncil, free, reserved }) {
                         return (
                             <div key={address} className="text-white p-1 box-border">
-                                <div className='w-72 h-64 flex flex-col items-center justify-center bg-kinda-black rounded-sm'>
-                                    <div className={`identicon-container mb-4 border-2 ${props.suffix === 'dot' ? 'border-dot' : 'border-ksm'} rounded-full box-content p-2`}>
-                                        <Identicon
-                                            value={address}
-                                            size={64}
-                                            theme={'polkadot'}
-                                        />
+                                <div className='w-96 h-44 flex flex-col items-start justify-start bg-kinda-black rounded-sm p-4'>
+                                    <div className="flex w-full items-center">
+                                        <div className={`identicon-container border-2 ${props.suffix === 'dot' ? 'border-dot' : 'border-ksm'} rounded-full box-content p-2`}>
+                                            <Identicon
+                                                value={address}
+                                                size={44}
+                                                theme={'polkadot'}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col items-center justify-center w-full text-center">
+                                            <p className="text-gray-300">
+                                                {display}
+                                            </p>
+                                            <p className="text-gray-400 text-sm">
+                                                {legal}
+                                            </p>
+                                            <p className="text-gray-500 text-xs">
+                                                {toShortAddress(address)}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="text-center">
-                                        <p className="text-gray-300">
-                                            {display}
-                                        </p>
-                                        <p className="text-gray-400 text-sm">
-                                            {legal}
-                                        </p>
-                                        <div className="flex flex-wrap justify-center">
-                                            {isValidator && (
-                                                <span className="text-blue-400 inline-block mx-1">
-                                                    validator
-                                                </span>)
-                                            }
-                                            {isNominator && (
-                                                <span className="text-purple-400 inline-block mx-1">
-                                                    nominator
-                                                </span>)
-                                            }
+                                    <div className="flex flex-col mt-4">
+                                        <div className="text-md text-gray-500">
+                                            free: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} font-secondary`}>{free} </span>
+                                        </div>
+                                        <div className="text-md text-gray-500">
+                                            reserved: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} font-secondary`}>{reserved} </span>
+                                        </div>
+                                    </div>
+                                    <div className="text-center w-full">
+                                        <div className="flex flex-wrap justify-start">
                                             {isPrimeCouncil && (
-                                                <span className="text-yellow-300 inline-block mx-1">
+                                                <span className="text-yellow-300 inline-block mr-1">
                                                     prime council
                                                 </span>)
                                             }
                                             {(isCouncil && !isPrimeCouncil) && (
-                                                <span className="text-pink-400 inline-block mx-1">
+                                                <span className="text-pink-400 inline-block mr-1">
                                                     council
                                                 </span>)
                                             }
+                                            {isValidator && (
+                                                <span className="text-blue-400 inline-block mr-1">
+                                                    validator
+                                                </span>)
+                                            }
+                                            {isNominator && (
+                                                <span className="text-purple-400 inline-block mr-1">
+                                                    nominator
+                                                </span>)
+                                            }
                                             {judgements.map(function ({ index, result, textColorClass }) {
-                                                return (<span key={index} className={`${textColorClass} inline-block mx-1`}>
-                                                    {result}
+                                                return (<span key={index} className={`${textColorClass} inline-block mr-1`}>
+                                                    {capitalCase(result).toLowerCase()}
                                                 </span>)
                                             })}
                                         </div>
