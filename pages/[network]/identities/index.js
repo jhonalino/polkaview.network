@@ -75,7 +75,6 @@ function getIdentityDetails(identity) {
 export default function Index(props) {
 
     const [identities, setIdentities] = useState([]);
-    const [registrar, setRegistrars] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadingText, setLoadingText] = useState('loading');
 
@@ -108,7 +107,7 @@ export default function Index(props) {
 
             registrars = registrars.toHuman();
 
-            setRegistrars(registrars);
+            console.log('registars', registrars);
 
 
             setLoadingText('getting council members');
@@ -145,6 +144,8 @@ export default function Index(props) {
                 var isValidator = !validator.isEmpty;
 
                 var result = {
+                    //make sure to check sub accounts for some flags
+                    isRegistrar: registrars.some(({ account }) => account === address) || subs.some(sub => (registrars.some(({ account }) => account === sub))),
                     isCouncil: councilMembers.includes(address) || subs.some(sub => councilMembers.includes(sub)),
                     isPrimeCouncil: address === primeCouncil || subs.some((sub => primeCouncil === sub)),
                     ...accountDetails,
@@ -221,7 +222,7 @@ export default function Index(props) {
                         <div className="text-gray-200">
                             {loadingText}...
                         </div>
-                    ) : (identities.map(function ({ address, display, legal, isValidator, isNominator, judgements, isPrimeCouncil, isCouncil, free, reserved }) {
+                    ) : (identities.map(function ({ address, display, legal, isValidator, isNominator, judgements, isPrimeCouncil, isCouncil, free, reserved, isRegistrar }) {
                         return (
                             <div key={address} className="text-white p-1 box-border">
                                 <div className='w-96 h-44 flex flex-col items-start justify-start bg-kinda-black rounded-sm p-4'>
@@ -255,6 +256,11 @@ export default function Index(props) {
                                     </div>
                                     <div className="text-center w-full">
                                         <div className="flex flex-wrap justify-start">
+                                            {isRegistrar && (
+                                                <span className="text-yellow-100 inline-block mr-1">
+                                                    registrar
+                                                </span>)
+                                            }
                                             {isPrimeCouncil && (
                                                 <span className="text-yellow-300 inline-block mr-1">
                                                     prime council
