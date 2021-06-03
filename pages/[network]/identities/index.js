@@ -145,8 +145,8 @@ export default function Index(props) {
                 var isValidator = !validator.isEmpty;
 
                 var result = {
-                    isCouncil: councilMembers.includes(address),
-                    isPrimeCouncil: address === primeCouncil,
+                    isCouncil: councilMembers.includes(address) || subs.some(sub => councilMembers.includes(sub)),
+                    isPrimeCouncil: address === primeCouncil || subs.some((sub => primeCouncil === sub)),
                     ...accountDetails,
                     subs,
                     address,
