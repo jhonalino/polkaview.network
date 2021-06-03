@@ -124,9 +124,11 @@ export default function Home(props) {
 
                 <header className="flex p-4 items-center justify-between">
                     <div className="flex items-center justify-start">
-                        <div>
-                            <img src="/polkaview-logo.png" className="w-56" />
-                        </div>
+                        <Link href="/" >
+                            <a>
+                                <img src="/polkaview-logo.png" className="w-56" />
+                            </a>
+                        </Link>>
                     </div>
                     <div>
 
