@@ -373,7 +373,7 @@ export default function Index(props) {
                                         </div>
                                         <div class="my-1"></div>
                                         <div className="text-center w-full">
-                                            <div className="flex flex-wrap justify-start font-bold text-lg">
+                                            <div className="flex flex-wrap justify-start font-bold text-lg uppercase">
                                                 {isRegistrar && (
                                                     <span className="text-yellow-100 inline-block mr-1">
                                                         registrar
