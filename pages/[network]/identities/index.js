@@ -70,28 +70,45 @@ function getIdentityDetails(identity) {
 }
 
 
-export default function Index() {
+export default function Index(props) {
 
     const [identities, setIdentities] = useState([]);
     const [registrar, setRegistrars] = useState([]);
-
+    const [loading, setLoading] = useState(true);
+    const [loadingText, setLoadingText] = useState('loading');
 
     useEffect(function () {
         async function fetch() {
 
-            const wsProvider = new WsProvider('wss://polkadot-node.polkaview.network');
+            setLoading(true);
+
+            setLoadingText('connecting to ' + props.suffixFull + ' blockchain');
+
+            let wsUrl = 'wss://polkadot-node.polkaview.network';
+
+            if (props.suffix === 'ksm') {
+                wsUrl = 'wss://kusama-node.polkaview.network';
+            }
+
+            const wsProvider = new WsProvider(wsUrl);
+
+            setLoadingText('connected');
 
             const api = new ApiPromise({ provider: wsProvider });
 
+            setLoadingText('connecting to ' + props.suffixFull + ' api');
+
             await api.isReady;
+
+            setLoadingText('getting registrars');
 
             var registrars = await api.query.identity.registrars();
 
             registrars = registrars.toHuman();
 
-            console.log(registrars);
-
             setRegistrars(registrars);
+
+            setLoadingText('loading ' + props.suffixFull + ' identities');
 
             let identities = await api.query.identity.identityOf.entries();
 
@@ -113,7 +130,6 @@ export default function Index() {
                 };
 
                 cb(null, result)
-                console.log('e');
 
             }, function (err, result) {
 
@@ -122,23 +138,22 @@ export default function Index() {
                     return;
                 }
 
-                console.log('iden', result);
                 setIdentities(result);
-
+                setLoading(false);
             });
 
 
         }
-        console.log('effect')
+
         fetch();
+
         return function () {
             console.log('cleanup effect');
         }
-    }, [])
 
-    console.log('testtt')
-    const text = '';
-    const props = {};
+    }, [props.suffix]);
+
+    const text = 'identities';
 
     return (
         <div className="w-full flex justify-center">
@@ -164,7 +179,7 @@ export default function Index() {
                     </div>
                     <div>
 
-                        <Link href={props.suffix === 'dot' ? '/ksm/staking' : '/dot/staking'} >
+                        <Link href={props.suffix === 'dot' ? '/ksm/identities' : '/dot/identities'} >
                             <a className={`text-${props.suffix === 'dot' ? 'ksm' : 'dot'} mb-2 text-right`} >
                                 <span className="text-gray-500">switch to </span> {props.suffix === 'dot' ? 'kusama' : 'polkadot'}
                             </a>
@@ -172,11 +187,15 @@ export default function Index() {
                     </div>
                 </header>
                 <div className="flex flex-wrap items-center justify-center">
-                    {identities && identities.map(function ({ address, display, legal, isValidator, isNominator, judgements }) {
+                    {loading ? (
+                        <div className="text-gray-200">
+                            {loadingText}...
+                        </div>
+                    ) : (identities.map(function ({ address, display, legal, isValidator, isNominator, judgements }) {
                         return (
                             <div key={address} className="text-white p-1 box-border">
                                 <div className='w-72 h-64 flex flex-col items-center justify-center bg-kinda-black rounded-sm'>
-                                    <div className="identicon-container mb-4 border-2 border-dot rounded-full box-content p-2">
+                                    <div className={`identicon-container mb-4 border-2 ${props.suffix === 'dot' ? 'border-dot' : 'border-ksm'} rounded-full box-content p-2`}>
                                         <Identicon
                                             value={address}
                                             size={64}
@@ -202,7 +221,6 @@ export default function Index() {
                                                 </span>)
                                             }
                                             {judgements.map(function ({ index, result, textColorClass }) {
-                                                console.log(textColorClass);
                                                 return (<span key={index} className={`${textColorClass} inline-block mx-1`}>
                                                     {result}
                                                 </span>)
@@ -212,7 +230,7 @@ export default function Index() {
                                 </div>
                             </div>
                         )
-                    })}
+                    }))}
                 </div>
             </div>
         </div>
@@ -220,3 +238,33 @@ export default function Index() {
 }
 
 
+
+export async function getServerSideProps(context) {
+
+    var network = context.query.network;
+
+    network = network ? network.toLowerCase() : "dot";
+
+    var suffix = '';
+    if (network === 'dot' || network === 'ksm') {
+        suffix = network;
+    } else {
+        suffix = 'dot';
+    }
+
+
+    var suffixFull;
+    if (suffix === 'dot') {
+        suffixFull = 'polkadot'
+    } else {
+        suffixFull = 'kusama'
+    }
+
+    return {
+        props: {
+            suffix,
+            suffixFull,
+        }
+    };
+
+}
