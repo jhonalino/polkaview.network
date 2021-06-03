@@ -246,17 +246,31 @@ export default function Index(props) {
                 {loading ? (<></>) : (
                     <div className="flex flex-col justify-center items-center w-full">
                         <div className="w-full bg-kinda-black flex justify-center mb-4">
-                            <input type="text" className={`m-auto px-4 py-4 text-${props.suffix === 'dot' ? 'dot' : 'ksm'} text-2xl max-w-screen-2xl w-full bg-transparent outline-none`}
-                                onFocus={() => {
-                                    setSearchInputFocus(true);
-                                }}
-                                onBlur={() => {
-                                    setSearchInputFocus(false);
-                                }}
-                                placeholder={searchInputFocus ? `search by name or account` : `search ${props.suffixFull} identities`} value={searchText} onInput={(e) => {
-                                    setSearchText(e.target.value);
-                                    _setDelayedSearchText(e.target.value);
-                                }} />
+                            <div className="max-w-screen-2xl bg-transparent w-full relative">
+                                <input type="text" className={`m-auto px-4 py-4 text-${props.suffix === 'dot' ? 'dot' : 'ksm'} text-2xl  w-full bg-transparent outline-none`}
+                                    onFocus={() => {
+                                        setSearchInputFocus(true);
+                                    }}
+                                    onBlur={() => {
+                                        setSearchInputFocus(false);
+                                    }}
+                                    placeholder={searchInputFocus ? `search by name or account` : `search ${props.suffixFull} identities`} value={searchText} onInput={(e) => {
+                                        setSearchText(e.target.value);
+                                        _setDelayedSearchText(e.target.value);
+                                    }} />
+                                {searchText && (
+                                    <div className={`text-${props.suffix === 'dot' ? 'dot' : 'ksm'} h-16 w-16 absolute right-0 top-0 cursor-pointer`}
+                                        onClick={() => {
+                                            setSearchText('');
+                                            setDelayedSearchText('');
+                                        }}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-full w-full" fill="gray" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 )}
