@@ -108,6 +108,17 @@ export default function Index(props) {
 
             setRegistrars(registrars);
 
+
+            setLoadingText('getting council members');
+
+            var councilMembers = await api.query.council.members();
+            councilMembers = councilMembers.toJSON();
+
+            var primeCouncil = await api.query.council.prime();
+            primeCouncil = primeCouncil.toJSON();
+
+            console.log(primeCouncil);
+
             setLoadingText('loading ' + props.suffixFull + ' identities');
 
             let identities = await api.query.identity.identityOf.entries();
@@ -123,6 +134,8 @@ export default function Index(props) {
                 var isValidator = !validator.isEmpty;
 
                 var result = {
+                    isCouncil: councilMembers.includes(address),
+                    isPrimeCouncil: address === primeCouncil,
                     address,
                     ...details,
                     isValidator,
@@ -195,7 +208,7 @@ export default function Index(props) {
                         <div className="text-gray-200">
                             {loadingText}...
                         </div>
-                    ) : (identities.map(function ({ address, display, legal, isValidator, isNominator, judgements }) {
+                    ) : (identities.map(function ({ address, display, legal, isValidator, isNominator, judgements, isPrimeCouncil, isCouncil }) {
                         return (
                             <div key={address} className="text-white p-1 box-border">
                                 <div className='w-72 h-64 flex flex-col items-center justify-center bg-kinda-black rounded-sm'>
@@ -222,6 +235,16 @@ export default function Index(props) {
                                             {isNominator && (
                                                 <span className="text-purple-400 inline-block mx-1">
                                                     nominator
+                                                </span>)
+                                            }
+                                            {isPrimeCouncil && (
+                                                <span className="text-yellow-300 inline-block mx-1">
+                                                    prime council
+                                                </span>)
+                                            }
+                                            {(isCouncil && !isPrimeCouncil) && (
+                                                <span className="text-pink-400 inline-block mx-1">
+                                                    council
                                                 </span>)
                                             }
                                             {judgements.map(function ({ index, result, textColorClass }) {
