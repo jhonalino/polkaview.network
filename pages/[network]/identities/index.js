@@ -85,6 +85,8 @@ export default function Index(props) {
 
     //     has sub account
 
+    // email twitter web element
+
     //     Unknown,
     //     FeePaid(Balance),
     //     Reasonable,
@@ -266,27 +268,39 @@ export default function Index(props) {
                         </div>
                     </div>
                 )}
-                <div className="w-full mb-12" style={{
+                <div className="w-full mb-24" style={{
                     minHeight: `calc(100vh - 138px)` //comes from manually calculating the header height
                 }}>
                     {loading ? (
                         <div className="text-gray-200">
                             {loadingText}...
                         </div>
-                    ) : (<AutoSizer>
-                        {({ width, height }) => {
-                            return (
-                                <List
-                                    height={height}
-                                    itemCount={filteredIdentities.length}
-                                    itemSize={380} //comes from manually calculating what fits
-                                    width={width}
-                                >
-                                    {IdentityCardRow}
-                                </List>
-                            )
-                        }}
-                    </AutoSizer>)}
+                    ) : (filteredIdentities.length > 0 ?
+                        (<AutoSizer>
+                            {({ width, height }) => {
+                                return (
+                                    <List
+                                        height={height}
+                                        itemCount={filteredIdentities.length}
+                                        itemSize={380} //comes from manually calculating what fits
+                                        width={width}
+                                    >
+                                        {IdentityCardRow}
+                                    </List>
+                                )
+                            }}
+                        </AutoSizer>)
+                        : (
+                            <div className="text-gray-200">
+                                no results found for <span className={`text-${props.suffix === 'dot' ? 'dot' : 'ksm'} underline cursor-pointer`}
+                                onClick={() => {
+                                    setSearchText('');
+                                }}>
+                                    {delayedSearchText} 
+                                </span>
+                            </div>
+                        )
+                    )}
                 </div>
             </div>
         </div >
