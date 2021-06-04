@@ -10,6 +10,7 @@ import Header from '../../../components/Header';
 import ReactPaginate from 'react-paginate';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import { capitalCase } from "change-case";
 
 function getIdentityDetails(identity) {
 
@@ -73,29 +74,18 @@ export default function Index(props) {
     const [searchInputFocus, setSearchInputFocus] = useState(false);
     const [itemsToLoad, setItemsToLoad] = useState(32);
 
-    // const [filterFlags, setFilterFlags] = useState({
-
-    //     registrar,
-    //     council,
-    //     validator,
-    //     nominator,
-
-    //     alphabetal
-    //     balance
-
-    //     has sub account
-
-    // email twitter web element
-
-    //     Unknown,
-    //     FeePaid(Balance),
-    //     Reasonable,
-    //     KnownGood,
-    //     OutOfDate,
-    //     LowQuality,
-    //     Erroneous,
-
-    // });
+    const [filterFlags, setFilterFlags] = useState({
+        registrar: false,
+        council: false,
+        validator: false,
+        nominator: false,
+        email: false,
+        twitter: false,
+        web: false,
+        element: false,
+        reasonable: false,
+        'known good': false,
+    });
 
     //debounce effect
     useEffect(() => {
@@ -214,17 +204,83 @@ export default function Index(props) {
     var filteredIdentities = useMemo(() => {
 
         return identities
-            .filter(function ({ display, legal, address }) {
+            .filter(function ({ display, legal, address, isCouncil, isPrimeCouncil, isRegistrar,
+                isValidator, isNominator,
+                email, web, riot, twitter,
+                judgements
+            }) {
 
                 var legalLower = legal.toLowerCase();
                 var displayLower = display.toLowerCase();
                 var searchLower = delayedSearchText.toLowerCase();
 
-                return legalLower.includes(searchLower) || displayLower.includes(searchLower) || (delayedSearchText === address)
+                var searchFilterValue = legalLower.includes(searchLower) || displayLower.includes(searchLower) || (delayedSearchText === address)
+
+
+                let hasFilterFlagOn = false;
+                let filterMatch = true;
+
+                for (let flag in filterFlags) {
+                    let flagVal = filterFlags[flag];
+
+                    if (flagVal) {
+                        hasFilterFlagOn = true
+
+                        if (flag === 'council' && !isCouncil) {
+                            filterMatch = false;
+                        }
+
+                        if (flag === 'registrar' && !isRegistrar) {
+                            filterMatch = false;
+                        }
+
+                        if (flag === 'validator' && !isValidator) {
+                            filterMatch = false;
+                        }
+
+                        if (flag === 'nominator' && !isNominator) {
+                            filterMatch = false;
+                        }
+
+                        if (flag === 'email' && !email) {
+                            filterMatch = false;
+                        }
+
+                        if (flag === 'twitter' && !twitter) {
+                            filterMatch = false;
+                        }
+
+                        if (flag === 'web' && !web) {
+                            filterMatch = false;
+                        }
+
+                        if (flag === 'element' && !riot) {
+                            filterMatch = false;
+                        }
+
+                        if (flag === 'reasonable' && !judgements.some(({result}) => result.toLowerCase() === 'reasonable')) {
+                            filterMatch = false;
+                        }
+
+                        if (flag === 'known good' && !judgements.some(({result}) => capitalCase(result).toLowerCase() === 'known good')) {
+                            filterMatch = false;
+                        }
+
+                    }
+
+                }
+
+
+                if (hasFilterFlagOn) {
+                    return searchFilterValue && filterMatch;
+                } else {
+                    return searchFilterValue;
+                }
 
             });
 
-    }, [delayedSearchText, identities]);
+
+    }, [delayedSearchText, identities, filterFlags]);
 
     const IdentityCardRow = ({ index, style }) => {
         let identity = filteredIdentities[index];
@@ -234,14 +290,39 @@ export default function Index(props) {
         );
     };
 
+    const handleFilterFlagClick = (flag) => {
+
+        var selectedFlagVal = filterFlags[flag];
+
+        setFilterFlags({
+            ...filterFlags,
+            [flag]: !selectedFlagVal
+        });
+
+    };
+
+    const clearFilterFlags = () => {
+
+        var copy = {
+            ...filterFlags
+        };
+
+        for (var flag in copy) {
+            copy[flag] = false;
+        }
+
+        setFilterFlags(copy);
+
+    };
+
     return (
         <div className="w-full flex justify-center">
             <Head title={props.suffixFull + ' identities | polkaview'} />
             <div className="w-full max-w-screen-2xl min-h-screen px-4">
                 <Header suffix={props.suffix} />
-                {loading ? (<></>) : (
+                {loading ? (<></>) : (<>
                     <div className="flex flex-col justify-center items-center w-full">
-                        <div className="w-full bg-kinda-black flex justify-center mb-4">
+                        <div className="w-full bg-kinda-black flex justify-center">
                             <div className="bg-transparent w-full relative">
                                 <input type="text" className={`m-auto px-4 py-4 box-border text-${props.suffix === 'dot' ? 'dot' : 'ksm'} text-2xl  w-full bg-transparent outline-none`}
                                     onFocus={() => {
@@ -267,9 +348,25 @@ export default function Index(props) {
                             </div>
                         </div>
                     </div>
+                    <div className="w-full h-10 flex items-center overflow-x-auto relative">
+                        {Object.keys(filterFlags).map(function (flag) {
+                            return (
+                                <span key={flag}
+                                    onClick={() => {
+                                        handleFilterFlagClick(flag);
+                                    }}
+                                    className={`cursor-pointer select-none text-gray-400 rounded-lg px-4 py-2 whitespace-nowrap ${filterFlags[flag] ? (
+                                        `text-${props.suffix === 'dot' ? 'dot' : 'ksm'}`
+                                    ) : ""}`}>
+                                    {flag}
+                                </span>
+                            )
+                        })}
+                    </div>
+                </>
                 )}
                 <div className="w-full mb-24" style={{
-                    minHeight: `calc(100vh - 138px)` //comes from manually calculating the header height
+                    minHeight: `calc(100vh - 178px)` //comes from manually calculating the header height
                 }}>
                     {loading ? (
                         <div className="text-gray-200">
@@ -291,13 +388,19 @@ export default function Index(props) {
                             }}
                         </AutoSizer>)
                         : (
-                            <div className="text-gray-200">
-                                no results found for <span className={`text-${props.suffix === 'dot' ? 'dot' : 'ksm'} underline cursor-pointer`}
+                            <div className="text-gray-200"
                                 onClick={() => {
-                                    setSearchText('');
+                                    if (delayedSearchText) {
+                                        setSearchText('');
+                                    } else {
+                                        clearFilterFlags();
+                                    }
                                 }}>
-                                    {delayedSearchText} 
+                                no results found for
+                                <span className={`mx-1 text-${props.suffix === 'dot' ? 'dot' : 'ksm'} underline cursor-pointer`}>
+                                    {delayedSearchText || 'the selected filter'}...
                                 </span>
+                                lets <span className="underline cursor-pointer">clear</span> it?
                             </div>
                         )
                     )}

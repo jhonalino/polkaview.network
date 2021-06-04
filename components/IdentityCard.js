@@ -21,10 +21,10 @@ export default function IdentityCard(props) {
                 <div className="flex md:flex-col w-full h-full justify-center items-center">
                     <div className={`h-12 w-12 flex-shrink-0 md:h-44 md:w-44 border-2 ${props.suffix === 'dot' ? 'border-dot' : 'border-ksm'} rounded-full box-content p-2 bg-black`}>
                         <Identicon
-                        style={{
-                            height: '100%',
-                            width: '100%',
-                        }}
+                            style={{
+                                height: '100%',
+                                width: '100%',
+                            }}
                             value={address}
                             size={'100%'}
                             theme={'polkadot'}
@@ -109,17 +109,17 @@ export default function IdentityCard(props) {
                     <div className="text-center w-full">
                         <div className="flex flex-wrap justify-start font-bold text-lg uppercase">
                             {isRegistrar && (
-                                <span className="text-yellow-100 inline-block mr-1">
+                                <span className="text-yellow-100 inline-block mr-2">
                                     registrar
                                 </span>)
                             }
                             {isPrimeCouncil && (
-                                <span className="text-yellow-300 inline-block mr-1">
+                                <span className="text-yellow-300 inline-block mr-2">
                                     prime council
                                 </span>)
                             }
                             {(isCouncil && !isPrimeCouncil) && (
-                                <span className="text-pink-400 inline-block mr-1">
+                                <span className="text-pink-400 inline-block mr-2">
                                     council
                                 </span>)
                             }
