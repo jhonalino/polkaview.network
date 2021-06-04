@@ -1,13 +1,14 @@
-import Head from 'next/head'
 import useSWR from 'swr'
 import CountUp from 'react-countup';
 import Link from 'next/link';
 import Chart from 'chart.js';
 import { useRef, useEffect } from 'react';
 import axios from 'axios';
-
 import Promise from 'bluebird';
 import redis from 'redis';
+
+import Head from '../../../components/Head';
+import Header from '../../../components/Header';
 
 const fetcher = url => axios.get(url).then(res => res.data)
 
@@ -90,8 +91,6 @@ export default function Home(props) {
 
     console.log(props);
 
-    var text = `${props.nominatorMinimum.valueF} ${props.suffixUppercase} min stake | Polkaview`;
-
     const { data, error } = useSWR(`/api/${props.suffix}/validators`, fetcher)
 
 
@@ -108,43 +107,11 @@ export default function Home(props) {
     return (
         <div className="w-full flex justify-center">
 
-            <Head>
-                <title>{text}</title>
-                <link rel="icon" href="/favicon.ico" />
-                <meta property="og:type" content="website" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <meta property="og:url" content="https://polkaview.network/" />
-                <meta property="og:title" content={text} />
-                <meta property="og:description" content={text} />
-                <link rel="preconnect" href="https://fonts.gstatic.com" />
-                <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Raleway&display=swap" rel="stylesheet" />
-            </Head>
+            <Head title={`${props.nominatorMinimum.valueF} ${props.suffixUppercase} min stake | Polkaview`}  />
 
             <div className="w-full max-w-screen-xl min-h-screen">
 
-                <header className="flex p-4 items-center justify-between">
-                    <div className="flex items-center justify-start">
-                        <Link href="/" >
-                            <a>
-                                <img src="/polkaview-logo.png" className="w-56" />
-                            </a>
-                        </Link>>
-                    </div>
-                    <div className="text-right flex flex-col items-end justify-end">
-
-                        {props.usdPrice > 0 ? (
-                            <div className={`ml-8 font-secondary text-${props.suffix}`}>
-                                <span className="font-bold">{props.suffixUppercase}</span><span> ${props.usdPrice}</span>
-                            </div>
-                        ) : ('')}
-
-                        <Link href={props.suffix === 'dot' ? '/ksm/staking' : '/dot/staking'} >
-                            <a className={`text-${props.suffix === 'dot' ? 'ksm' : 'dot'} mb-2 text-right`} >
-                                <span className="text-gray-500">switch to </span> {props.suffix === 'dot' ? 'kusama' : 'polkadot'}
-                            </a>
-                        </Link>
-                    </div>
-                </header>
+                <Header suffix={props.suffix} />
 
                 <div className="flex justify-center text-center">
                     <Link href="/dot/identities" >

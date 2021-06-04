@@ -1,30 +1,21 @@
-import Head from 'next/head'
 import Link from 'next/link';
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { hexToString } from '@polkadot/util';
 import Identicon from '@polkadot/react-identicon';
 import async from 'async';
-import { debounce } from 'lodash';
-import {
-    capitalCase,
-} from "change-case";
-function toShortAddress(_address) {
-
-    const address = (_address || '');
-
-    return (address.length > 13)
-        ? `${address.slice(0, 6)}…${address.slice(-6)}`
-        : address;
-
-}
+import IdentityCard from '../../../components/IdentityCard';
+import Head from '../../../components/Head';
+import Header from '../../../components/Header';
+import ReactPaginate from 'react-paginate';
+import { FixedSizeList as List } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
 function getIdentityDetails(identity) {
 
     if (identity) {
 
         var judgements = identity.judgements;
-
 
         var colorMap = {
             unknown: 'text-gray-300',
@@ -47,7 +38,6 @@ function getIdentityDetails(identity) {
             };
 
         });
-
 
         identity = identity.info;
 
@@ -81,6 +71,7 @@ export default function Index(props) {
     const [loading, setLoading] = useState(true);
     const [loadingText, setLoadingText] = useState('loading');
     const [searchInputFocus, setSearchInputFocus] = useState(false);
+    const [itemsToLoad, setItemsToLoad] = useState(32);
 
     // const [filterFlags, setFilterFlags] = useState({
 
@@ -103,7 +94,19 @@ export default function Index(props) {
     //     Erroneous,
 
     // });
-    const _setDelayedSearchText = debounce(setDelayedSearchText, 100)
+
+    //debounce effect
+    useEffect(() => {
+
+        var timeoutId = window.setTimeout(function () {
+            setDelayedSearchText(searchText);
+        }, 300);
+
+        return function () {
+            window.clearTimeout(timeoutId);
+        };
+
+    }, [searchText])
 
     useEffect(function () {
         async function fetch() {
@@ -192,7 +195,6 @@ export default function Index(props) {
                     console.log(err, 'err');
                     return;
                 }
-                console.log('result:', result[0]);
                 setIdentities(result);
                 setLoading(false);
             });
@@ -203,53 +205,43 @@ export default function Index(props) {
         fetch();
 
         return function () {
-            console.log('cleanup effect');
         }
 
     }, [props.suffix]);
 
-    const text = props.suffixFull + ' identities | polkaview';
+    var filteredIdentities = useMemo(() => {
 
-    console.log('render');
+        return identities
+            .filter(function ({ display, legal, address }) {
+
+                var legalLower = legal.toLowerCase();
+                var displayLower = display.toLowerCase();
+                var searchLower = delayedSearchText.toLowerCase();
+
+                return legalLower.includes(searchLower) || displayLower.includes(searchLower) || (delayedSearchText === address)
+
+            });
+
+    }, [delayedSearchText, identities]);
+
+    const IdentityCardRow = ({ index, style }) => {
+        let identity = filteredIdentities[index];
+
+        return (
+            <IdentityCard {...props} {...identity} style={style} />
+        );
+    };
 
     return (
         <div className="w-full flex justify-center">
-
-            <Head>
-                <title>{text}</title>
-                <link rel="icon" href="/favicon.ico" />
-                <meta property="og:type" content="website" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <meta property="og:url" content="https://polkaview.network/" />
-                <meta property="og:title" content={text} />
-                <meta property="og:description" content={text} />
-                <link rel="preconnect" href="https://fonts.gstatic.com" />
-                <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Raleway&display=swap" rel="stylesheet" />
-            </Head>
-
-            <div className="w-full max-w-screen-3xl min-h-screen">
-                <header className="flex p-4 items-center justify-between">
-                    <div className="flex items-center justify-start">
-                        <Link href="/" >
-                            <a>
-                                <img src="/polkaview-logo.png" className="w-56" />
-                            </a>
-                        </Link>
-                    </div>
-                    <div className="text-right flex justify-end">
-                        <Link href={props.suffix === 'dot' ? '/ksm/identities' : '/dot/identities'} >
-                            <a className={`text-${props.suffix === 'dot' ? 'ksm' : 'dot'} mb-2 text-right`} >
-                                <span className="text-gray-500">switch to </span> {props.suffix === 'dot' ? 'kusama' : 'polkadot'}
-                            </a>
-                        </Link>
-                    </div>
-                </header>
-
+            <Head title={props.suffixFull + ' identities | polkaview'} />
+            <div className="w-full max-w-screen-2xl min-h-screen px-4">
+                <Header suffix={props.suffix} />
                 {loading ? (<></>) : (
                     <div className="flex flex-col justify-center items-center w-full">
                         <div className="w-full bg-kinda-black flex justify-center mb-4">
-                            <div className="max-w-screen-2xl bg-transparent w-full relative">
-                                <input type="text" className={`m-auto px-4 py-4 text-${props.suffix === 'dot' ? 'dot' : 'ksm'} text-2xl  w-full bg-transparent outline-none`}
+                            <div className="bg-transparent w-full relative">
+                                <input type="text" className={`m-auto px-4 py-4 box-border text-${props.suffix === 'dot' ? 'dot' : 'ksm'} text-2xl  w-full bg-transparent outline-none`}
                                     onFocus={() => {
                                         setSearchInputFocus(true);
                                     }}
@@ -258,13 +250,11 @@ export default function Index(props) {
                                     }}
                                     placeholder={searchInputFocus ? `search by name or account` : `search ${props.suffixFull} identities`} value={searchText} onInput={(e) => {
                                         setSearchText(e.target.value);
-                                        _setDelayedSearchText(e.target.value);
                                     }} />
                                 {searchText && (
                                     <div className={`text-${props.suffix === 'dot' ? 'dot' : 'ksm'} h-16 w-16 absolute right-0 top-0 cursor-pointer`}
                                         onClick={() => {
                                             setSearchText('');
-                                            setDelayedSearchText('');
                                         }}
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-full w-full" fill="gray" viewBox="0 0 24 24" stroke="currentColor">
@@ -276,131 +266,32 @@ export default function Index(props) {
                         </div>
                     </div>
                 )}
-                <div className="flex flex-wrap items-center justify-center">
+                <div className="w-full mb-12" style={{
+                    minHeight: `calc(100vh - 138px)` //comes from manually calculating the header height
+                }}>
                     {loading ? (
                         <div className="text-gray-200">
                             {loadingText}...
                         </div>
-                    ) : (identities
-                        .filter(function ({ display, legal, address }) {
-
-                            var legalLower = legal.toLowerCase();
-                            var displayLower = display.toLowerCase();
-                            var searchLower = delayedSearchText.toLowerCase();
-
-                            return legalLower.includes(searchLower) || displayLower.includes(searchLower) || (searchText === address)
-
-                        })
-                        .map(function ({ address, display, legal, isValidator, isNominator, judgements, isPrimeCouncil, isCouncil, free, reserved, isRegistrar, riot, web, twitter, email, subs }) {
+                    ) : (<AutoSizer>
+                        {({ width, height }) => {
                             return (
-                                <div key={address} className="text-white p-1 box-border">
-                                    <div className='w-96 h-96 flex flex-col items-start justify-start bg-kinda-black rounded-sm p-4'>
-                                        <div className="flex w-full items-center">
-                                            <div className={`identicon-container border-2 ${props.suffix === 'dot' ? 'border-dot' : 'border-ksm'} rounded-full box-content p-2`}>
-                                                <Identicon
-                                                    value={address}
-                                                    size={44}
-                                                    theme={'polkadot'}
-                                                />
-                                            </div>
-                                            <div className="flex flex-col items-center justify-center w-full text-center">
-                                                <p className="text-gray-300">
-                                                    {display}
-                                                </p>
-                                                <p className="text-gray-400 text-sm">
-                                                    {legal}
-                                                </p>
-                                                <p className="text-gray-500 text-xs">
-                                                    {toShortAddress(address)}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-col mt-4">
-                                            <div className="text-md text-gray-500">
-                                                free: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} font-secondary`}>{free} </span>
-                                            </div>
-                                            <div className="text-md text-gray-500">
-                                                reserved: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} font-secondary`}>{reserved} </span>
-                                            </div>
-                                            <div className="my-1"></div>
-                                            <div className="text-md text-gray-500">
-                                                twitter: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{twitter || '-'}</span>
-                                            </div>
-                                            <div className="text-md text-gray-500">
-                                                email: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{email || '-'}</span>
-                                            </div>
-                                            <div className="text-md text-gray-500">
-                                                web: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{web || '-'}</span>
-                                            </div>
-                                            <div className="text-md text-gray-500">
-                                                element: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{riot || '-'}</span>
-                                            </div>
-                                            <div className="my-1"></div>
-                                            <div className="text-md text-gray-500">
-                                                subs count: <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} `}>{subs.length}</span>
-                                            </div>
-                                            <div className="text-md text-gray-500">
-                                                staking:
-                                                {isValidator && (
-                                                    <span className="text-blue-400 inline-block mx-1">
-                                                        validator
-                                                    </span>)
-                                                }
-                                                {isNominator && (
-                                                    <span className="text-purple-400 inline-block mx-1">
-                                                        nominator
-                                                    </span>)
-                                                }
-                                                {!isValidator && !isNominator && (
-                                                    <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} mx-1`}>-</span>
-                                                )}
-                                            </div>
-                                            <div className="text-md text-gray-500">
-                                                judgements:
-                                                {
-                                                    judgements.map(function ({ index, result, textColorClass }) {
-                                                        return (<span key={index} className={`${textColorClass} inline-block mx-1`}>
-                                                            {capitalCase(result).toLowerCase()}
-                                                        </span>)
-                                                    })
-                                                }
-                                                {
-                                                    judgements.length === 0 && (
-                                                        <span className={`text-${props.suffix === 'ksm' ? 'ksm' : 'dot'} mx-1`}>-</span>
-                                                    )
-                                                }
-                                            </div>
-                                        </div>
-                                        <div className="my-1"></div>
-                                        <div className="text-center w-full">
-                                            <div className="flex flex-wrap justify-start font-bold text-lg uppercase">
-                                                {isRegistrar && (
-                                                    <span className="text-yellow-100 inline-block mr-1">
-                                                        registrar
-                                                    </span>)
-                                                }
-                                                {isPrimeCouncil && (
-                                                    <span className="text-yellow-300 inline-block mr-1">
-                                                        prime council
-                                                    </span>)
-                                                }
-                                                {(isCouncil && !isPrimeCouncil) && (
-                                                    <span className="text-pink-400 inline-block mr-1">
-                                                        council
-                                                    </span>)
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <List
+                                    height={height}
+                                    itemCount={filteredIdentities.length}
+                                    itemSize={380} //comes from manually calculating what fits
+                                    width={width}
+                                >
+                                    {IdentityCardRow}
+                                </List>
                             )
-                        }))}
+                        }}
+                    </AutoSizer>)}
                 </div>
             </div>
         </div >
     )
 }
-
 
 
 export async function getServerSideProps(context) {

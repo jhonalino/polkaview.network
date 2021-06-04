@@ -11,7 +11,7 @@ module.exports = {
             colors: {
                 dot: '#e6007a',
                 ksm: '#FF8F00',
-                "kinda-black": 'rgb(18 19 18 / 70%)'
+                "kinda-black": 'rgb(18 19 18 / 27%)'
             },
             fontFamily: {
                 'primary': ['Raleway', 'sans-serif'],

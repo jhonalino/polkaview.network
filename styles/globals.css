@@ -47,14 +47,6 @@ body {
         --green2: #e6007a;
         --green3: #e6007a;
     }
-
-  
-    .identicon-container {
-        /* background: rgb(40, 40, 41); */
-        background: black;
-        height: 44px;
-        width: 44px;    
-    }
 }
 
 
