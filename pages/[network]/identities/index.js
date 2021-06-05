@@ -77,8 +77,8 @@ export default function Index(props) {
     const [filterFlags, setFilterFlags] = useState({
         registrar: false,
         council: false,
-        validator: false,
-        nominator: false,
+        'elected validator': false,
+        'elected nominator': false,
         email: false,
         twitter: false,
         web: false,
@@ -234,11 +234,11 @@ export default function Index(props) {
                             filterMatch = false;
                         }
 
-                        if (flag === 'validator' && !isValidator) {
+                        if (flag === 'elected validator' && !isValidator) {
                             filterMatch = false;
                         }
 
-                        if (flag === 'nominator' && !isNominator) {
+                        if (flag === 'elected nominator' && !isNominator) {
                             filterMatch = false;
                         }
 
