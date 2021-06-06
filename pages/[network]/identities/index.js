@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router'
 import { useEffect, useMemo, useState } from "react";
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { hexToString } from '@polkadot/util';
@@ -11,6 +12,7 @@ import ReactPaginate from 'react-paginate';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { capitalCase } from "change-case";
+import queryString from 'query-string';
 
 function getIdentityDetails(identity) {
 
@@ -64,32 +66,56 @@ function getIdentityDetails(identity) {
 }
 
 
+let filterFlagKeys = {
+    registrar: null,
+    council: null,
+    'elected validator': null,
+    'elected nominator': null,
+    email: null,
+    twitter: null,
+    web: null,
+    element: null,
+    reasonable: null,
+    'known good': null,
+};
+
+const populateFilterFlagFromQuery = function (filterFlagKeys, query) {
+
+    var newFilterFlagKeys = {
+        ...filterFlagKeys
+    };
+
+    for (var key in query) {
+
+        if (newFilterFlagKeys.hasOwnProperty(key)) {
+            newFilterFlagKeys[key] = true
+        }
+    }
+
+    return newFilterFlagKeys;
+
+};
+
 export default function Index(props) {
 
+    const router = useRouter();
+
+    var searchQuery = router.query.search || '';
+
     const [identities, setIdentities] = useState([]);
-    const [searchText, setSearchText] = useState(props.search);
-    const [delayedSearchText, setDelayedSearchText] = useState(props.search);
+    const [searchText, setSearchText] = useState(searchQuery);
+    const [delayedSearchText, setDelayedSearchText] = useState(searchQuery);
     const [loading, setLoading] = useState(true);
     const [loadingText, setLoadingText] = useState('loading');
     const [searchInputFocus, setSearchInputFocus] = useState(false);
     const [itemsToLoad, setItemsToLoad] = useState(32);
 
-    const [filterFlags, setFilterFlags] = useState({
-        registrar: false,
-        council: false,
-        'elected validator': false,
-        'elected nominator': false,
-        email: false,
-        twitter: false,
-        web: false,
-        element: false,
-        reasonable: false,
-        'known good': false,
-    });
+
+    //assign null for falsy values for query string skips it
+    const [filterFlags, setFilterFlags] = useState(populateFilterFlagFromQuery(filterFlagKeys, router.query));
 
     //debounce effect
     useEffect(() => {
-
         var timeoutId = window.setTimeout(function () {
             setDelayedSearchText(searchText);
         }, 300);
@@ -258,11 +284,11 @@ export default function Index(props) {
                             filterMatch = false;
                         }
 
-                        if (flag === 'reasonable' && !judgements.some(({result}) => result.toLowerCase() === 'reasonable')) {
+                        if (flag === 'reasonable' && !judgements.some(({ result }) => result.toLowerCase() === 'reasonable')) {
                             filterMatch = false;
                         }
 
-                        if (flag === 'known good' && !judgements.some(({result}) => capitalCase(result).toLowerCase() === 'known good')) {
+                        if (flag === 'known good' && !judgements.some(({ result }) => capitalCase(result).toLowerCase() === 'known good')) {
                             filterMatch = false;
                         }
 
@@ -282,6 +308,31 @@ export default function Index(props) {
 
     }, [delayedSearchText, identities, filterFlags]);
 
+    useEffect(() => {
+
+        let parsed = queryString.parse(location.search);
+
+        let newQs = {
+            ...parsed,
+            ...filterFlags,
+            //be explicit about null so it gets skipped in the url params
+            search: delayedSearchText || null
+        };
+
+        var stringified = queryString.stringify(newQs, { skipNull: true });
+
+        var newUrl = `/${props.suffix}/identities`;
+
+        if (stringified) {
+
+            newUrl += `?${stringified}`;
+
+        }
+
+        router.push(newUrl);
+
+    }, [filterFlags, delayedSearchText])
+
     const IdentityCardRow = ({ index, style }) => {
         let identity = filteredIdentities[index];
 
@@ -294,9 +345,10 @@ export default function Index(props) {
 
         var selectedFlagVal = filterFlags[flag];
 
+        //assign null for falsy values so query string skips it
         setFilterFlags({
             ...filterFlags,
-            [flag]: !selectedFlagVal
+            [flag]: !selectedFlagVal ? true : null
         });
 
     };
@@ -308,7 +360,9 @@ export default function Index(props) {
         };
 
         for (var flag in copy) {
-            copy[flag] = false;
+
+            //assign null for falsy values so query string skips it
+            copy[flag] = null;
         }
 
         setFilterFlags(copy);
@@ -322,7 +376,7 @@ export default function Index(props) {
                 <Header suffix={props.suffix} />
                 {loading ? (<></>) : (<>
                     <div className="flex flex-col justify-center items-center w-full">
-                        <div className="w-full bg-kinda-black flex justify-center">
+                        <div className="w-full bg-gray-900 flex justify-center ">
                             <div className="bg-transparent w-full relative">
                                 <input type="text" className={`m-auto px-4 py-4 box-border text-${props.suffix === 'dot' ? 'dot' : 'ksm'} text-2xl  w-full bg-transparent outline-none`}
                                     onFocus={() => {
@@ -417,8 +471,6 @@ export async function getServerSideProps(context) {
 
     network = network ? network.toLowerCase() : "dot";
 
-    var search = context.query.search || '';
-
     var suffix = '';
     if (network === 'dot' || network === 'ksm') {
         suffix = network;
@@ -438,7 +490,6 @@ export async function getServerSideProps(context) {
         props: {
             suffix,
             suffixFull,
-            search
         }
     };
 
