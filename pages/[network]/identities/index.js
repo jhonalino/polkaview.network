@@ -373,7 +373,7 @@ export default function Index(props) {
         <div className="w-full flex justify-center">
             <Head title={props.suffixFull + ' identities | polkaview'} />
             <div className="w-full max-w-screen-2xl min-h-screen px-4">
-                <Header suffix={props.suffix} />
+                <Header />
                 {loading ? (<></>) : (<>
                     <div className="flex flex-col justify-center items-center w-full">
                         <div className="w-full bg-gray-900 flex justify-center ">
