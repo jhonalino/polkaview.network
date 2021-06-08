@@ -1,5 +1,7 @@
+import Link from 'next/link';
 import Identicon from '@polkadot/react-identicon';
 import { capitalCase } from "change-case";
+import { useSuffix } from '../hooks';
 
 function toShortAddress(_address) {
 
@@ -13,7 +15,10 @@ function toShortAddress(_address) {
 
 export default function IdentityCard(props) {
 
+    const [suffix, suffixFull] = useSuffix();
+
     const { style, address, display, legal, isValidator, isNominator, judgements, isPrimeCouncil, isCouncil, free, reserved, isRegistrar, riot, web, twitter, email, subs } = props;
+
 
     return (
         <div className="text-white box-border w-full p-1" style={style}>
@@ -30,22 +35,27 @@ export default function IdentityCard(props) {
                             theme={'polkadot'}
                         />
                     </div>
-                    <div className="flex flex-col items-center justify-center w-full pl-4 text-center md:mt-4">
-                        <p className="text-gray-300">
-                            {display}
-                        </p>
-                        <p className="text-gray-400 text-sm">
-                            {legal}
-                        </p>
-                        <p className="text-gray-500 text-xs">
-                            <span className="lg:hidden">
-                                {toShortAddress(address)}
-                            </span>
-                            <span className="hidden lg:inline text-lg">
-                                {address}
-                            </span>
-                        </p>
-                    </div>
+
+                    <Link href={`/${suffix}/accounts/${address}`} >
+                        <a>
+                            <div className="flex flex-col items-center justify-center w-full pl-4 text-center md:mt-4">
+                                <p className="text-gray-300">
+                                    {display}
+                                </p>
+                                <p className="text-gray-400 text-sm">
+                                    {legal}
+                                </p>
+                                <p className="text-gray-500 text-xs">
+                                    <span className="lg:hidden">
+                                        {toShortAddress(address)}
+                                    </span>
+                                    <span className="hidden lg:inline text-lg">
+                                        {address}
+                                    </span>
+                                </p>
+                            </div>
+                        </a>
+                    </Link>
                 </div>
                 <div className="flex flex-col w-full">
                     <div className="flex flex-col mt-4">
@@ -127,6 +137,6 @@ export default function IdentityCard(props) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 };
