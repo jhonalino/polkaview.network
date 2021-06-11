@@ -1,33 +1,44 @@
-version: "3"
+version: '3'
 
 networks:
-  db:
-    external: true
+    db:
+        external: true
 
 volumes:
-  redis-data:
+    redis-data:
+    postgres:
 
 services:
-  redis:
-    image: redis:6-alpine3.13
-    container_name: redis
-    volumes:
-      - redis-data:/data
-    networks:
-      - db
+    db:
+        image: postgres
+        volumes:
+            - postgres:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_DB=polkaview
+            - POSTGRES_USER=polkaview
+            - POSTGRES_PASSWORD=polkaview
+        networks:
+            - db
 
-  polkaview:
-    build: .
-    image: polkaview:latest
-    command: npm run dev
-    container_name: polkaview
-    restart: always
-    ports:
-      - 3000:3000
-    depends_on:
-      - redis
-    volumes:
-      - ./:/usr/src/app 
-    networks:
-      - db
+    redis:
+        image: redis:6-alpine3.13
+        container_name: redis
+        volumes:
+            - redis-data:/data
+        networks:
+            - db
 
+    polkaview:
+        build: .
+        image: polkaview:latest
+        command: npm run dev
+        container_name: polkaview
+        restart: always
+        ports:
+            - 3000:3000
+        depends_on:
+            - redis
+        volumes:
+            - ./:/usr/src/app
+        networks:
+            - db
