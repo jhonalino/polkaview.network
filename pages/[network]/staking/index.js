@@ -107,7 +107,7 @@ export default function Home(props) {
     return (
         <div className="w-full flex justify-center">
 
-            <Head title={`${props.nominatorMinimum.valueF} ${props.suffixUppercase} min stake | Polkaview`}  />
+            <Head title={`${props.nominatorMinimum.valueF} ${props.suffixUppercase} min stake | Polkaview`} />
 
             <div className="w-full max-w-screen-xl min-h-screen">
 
@@ -171,77 +171,12 @@ export default function Home(props) {
 
                     </main>
                 </div>
-
-                <div className="text-white">
-
-                    <table className={`table-auto table-${props.suffix}`}>
-                        <thead>
-                            <tr>
-                                <th>Identity</th>
-                                <th>Address</th>
-                                <th>Nominators</th>
-                                <th>Own Stake</th>
-                                <th>Total Stake</th>
-                                <th>Commission</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data?.validators && data.validators.map(function ({ identity,
-                                ownF,
-                                totalF,
-                                who,
-                                nominatorCount,
-                                commission }) {
-
-                                return (
-                                    <tr key={who}>
-                                        <td>{identity?.display || 'none'}</td>
-                                        <td>{who}</td>
-                                        <td>{nominatorCount}</td>
-                                        <td className="font-secondary tracking-widest">
-                                            <CountUp
-                                                start={0}
-                                                delay={0}
-                                                separator=","
-                                                duration={0.1}
-                                                decimals={2}
-                                                end={parseFloat(ownF)}
-                                            >
-                                                {({ countUpRef, start }) => (
-                                                    <h1 className="">
-                                                        <div className="font-secondary tracking-wider" >
-                                                            <span className="font-secondary tracking-widest" ref={countUpRef}></span>
-                                                        </div>
-                                                    </h1>
-                                                )}
-                                            </CountUp>
-                                        </td>
-                                        <td >
-                                            <CountUp
-                                                start={0}
-                                                delay={0}
-                                                separator=","
-                                                duration={0.1}
-                                                decimals={2}
-                                                end={parseFloat(totalF)}
-                                            >
-                                                {({ countUpRef, start }) => (
-                                                    <h1 className="">
-                                                        <div className="font-secondary tracking-wider" >
-                                                            <span className="font-secondary tracking-widest" ref={countUpRef}></span>
-                                                        </div>
-                                                    </h1>
-                                                )}
-                                            </CountUp>
-                                        </td>
-                                        <td>{commission}</td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
-
+                <div className={`flex justify-center text-center text-gray-400 p-4 flex-col mb-10 border border-${props.suffix.toLowerCase()} rounded-md`}>
+                    <p className="mb-2">VEGAS_LIFE is participating in validator elections. please nominate us ❤️</p>
+                    <p className="text-dot">Polkadot - VEGAS_LIFE_DOT - 1GqH2Y9UVqp6BNCbT7v5ucgksvFvDCPiBdFEa7vtAxVo1Pb</p>
+                    <p className="text-ksm">Kusama - VEGAS_LIFE_MAIN  - Dq97kmsJXGTciU1eMXZMAp4D41Y9e7kQ4hmFBfZW7YD4CCf</p>
                 </div>
+
             </div>
 
         </div>
