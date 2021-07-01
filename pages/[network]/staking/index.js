@@ -171,10 +171,19 @@ export default function Home(props) {
 
                     </main>
                 </div>
-                <div className={`flex justify-center text-center text-gray-400 p-4 flex-col mb-10 border border-${props.suffix.toLowerCase()} rounded-md`}>
-                    <p className="mb-2">VEGAS_LIFE is participating in validator elections. please nominate us ❤️</p>
-                    <p className="text-dot">Polkadot - VEGAS_LIFE_DOT - 1GqH2Y9UVqp6BNCbT7v5ucgksvFvDCPiBdFEa7vtAxVo1Pb</p>
-                    <p className="text-ksm">Kusama - VEGAS_LIFE_MAIN  - Dq97kmsJXGTciU1eMXZMAp4D41Y9e7kQ4hmFBfZW7YD4CCf</p>
+
+                <p className="mb-4 text-gray-400 text-center">we is participating in validator elections. please nominate us ❤️</p>
+                <div className={`flex justify-center text-center text-gray-400 p-4 flex-col mb-4 border border-dot rounded-md`}>
+                    <p className="text-dot">Polkadot</p>
+                    <p className="text-dot">VEGAS_LIFE_DOT - 1GqH2Y9UVqp6BNCbT7v5ucgksvFvDCPiBdFEa7vtAxVo1Pb</p>
+                    <p className="text-dot">PARANODES.IO/01 - 14hM4oLJCK6wtS7gNfwTDhthRjy5QJ1t3NAcoPjEepo9AH67</p>
+                    <p className="text-dot">PARANODES.IO/02 - 13wroNHV6aJEkUFJEx4NYv7kv5vgq4HypLAPSz347VVQbYj3</p>
+                </div>
+                <div className={`flex justify-center text-center text-gray-400 p-4 flex-col mb-4 border border-ksm rounded-md`}>
+                    <p className="text-ksm">Kusama</p>
+                    <p className="text-ksm">VEGAS_LIFE_MAIN  - Dq97kmsJXGTciU1eMXZMAp4D41Y9e7kQ4hmFBfZW7YD4CCf</p>
+                    <p className="text-ksm">PARANODES.IO/01 - H3DL157HL7DkvV2kXocanmKaGXNyQphUDVW33Fnfk8KNhsv</p>
+                    <p className="text-ksm">PARANODES.IO/02 - HtYny8Eker9VBEKQrtBd6Y5PTkaHQFSvyMFy2bkd66wGBan</p>
                 </div>
 
             </div>
