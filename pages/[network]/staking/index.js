@@ -172,7 +172,7 @@ export default function Home(props) {
                     </main>
                 </div>
 
-                <p className="mb-4 text-gray-400 text-center">we is participating in validator elections. please nominate us ❤️</p>
+                <p className="mb-4 text-gray-400 text-center">We are participating in validator elections. please nominate us ❤️</p>
                 <div className={`flex justify-center text-center text-gray-400 p-4 flex-col mb-4 border border-dot rounded-md`}>
                     <p className="text-dot">Polkadot</p>
                     <p className="text-dot">VEGAS_LIFE_DOT - 1GqH2Y9UVqp6BNCbT7v5ucgksvFvDCPiBdFEa7vtAxVo1Pb</p>
