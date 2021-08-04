@@ -173,8 +173,8 @@ export default function Home(props) {
                 <p className="mb-4 text-gray-400 text-center">We are participating in validator elections. please nominate us ❤️</p>
                 <div className={`flex justify-center text-center text-gray-400 p-4 flex-col mb-4 border border-dot rounded-md`}>
                     <p className="text-dot">Polkadot</p>
-                    <p className="text-dot">Polkadot - VEGAS_LIFE/1 -  149riLdwAVzXg7Cm88RcXhbuFi3zUgwrGsJSSPjC47PRxHQW</p>
-                    <p className="text-dot">Polkadot - VEGAS_LIFE/2 - 1GqH2Y9UVqp6BNCbT7v5ucgksvFvDCPiBdFEa7vtAxVo1Pb</p>
+                    <p className="text-dot">VEGAS_LIFE/1 -  149riLdwAVzXg7Cm88RcXhbuFi3zUgwrGsJSSPjC47PRxHQW</p>
+                    <p className="text-dot">VEGAS_LIFE/2 - 1GqH2Y9UVqp6BNCbT7v5ucgksvFvDCPiBdFEa7vtAxVo1Pb</p>
                     <p className="text-dot">PARANODES.IO/01 - 14hM4oLJCK6wtS7gNfwTDhthRjy5QJ1t3NAcoPjEepo9AH67</p>
                     <p className="text-dot">PARANODES.IO/02 - 13wroNHV6aJEkUFJEx4NYv7kv5vgq4HypLAPSz347VVQbYj3</p>
                     <p className="text-dot">DOTSCANNER.COM - 12xezF6c5sTeoN6miTMe2SLKGWPCPsCT62BKnXLDC5avBZcE</p>
