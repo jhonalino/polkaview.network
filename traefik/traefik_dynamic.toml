@@ -1,7 +1,8 @@
-[http.middlewares.redirect-www.redirectRegex]
-	regex = "^https?://wwww\\.(.+)"
-	replacement = "https://${1}"
-	permanent = true
+[http.middlewares]
+	[http.middlewares.redirect-www.redirectRegex]
+		regex = "^https?://wwww\\.(.+)"
+		replacement = "https://${1}"
+		permanent = true
 
 [http.middlewares.simpleAuth.basicAuth]
 	users = [
