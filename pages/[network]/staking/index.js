@@ -58,26 +58,26 @@ const StatDisplay = function (props) {
                 )}
             </CountUp>
 
-            <div className="">
-
-                <div>
-                    <a className="text-blue-500 text-md lowercase" target="_blank" href={`https://dotscanner.com/${props.suffixFull}/account/${props.address}?utm_source=polkaview`}>
-                        <span className="mr-1">DotScanner</span>
-                        <svg className="inline" width="12px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                    </a>
+            {props.address && (
+                <div className="">
+                    <div>
+                        <a className="text-blue-500 text-md lowercase" target="_blank" href={`https://dotscanner.com/${props.suffixFull}/account/${props.address}?utm_source=polkaview`}>
+                            <span className="mr-1">DotScanner</span>
+                            <svg className="inline" width="12px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+                    </div>
+                    <div>
+                        <a className="text-blue-500 text-md lowercase" target="_blank" href={`https://polkascan.io/${props.suffixFull}/account/${props.address}`}>
+                            <span className="mr-1">polkascan</span>
+                            <svg className="inline" width="12px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
-
-                <div>
-                    <a className="text-blue-500 text-md lowercase" target="_blank" href={`https://polkascan.io/${props.suffixFull}/account/${props.address}`}>
-                        <span className="mr-1">polkascan</span>
-                        <svg className="inline" width="12px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
+            )}
 
         </div>
     );
@@ -90,7 +90,6 @@ export default function Home(props) {
     console.log(props);
 
     const { data, error } = useSWR(`/api/${props.suffix}/validators`, fetcher)
-
 
     useEffect(() => {
 
@@ -114,7 +113,7 @@ export default function Home(props) {
                 <div className="flex justify-center text-center">
                     <Link href="/dot/identities" >
                         <a className="text-dot underline">
-                            checkout identities beta
+                            {props.suffixFull} identities
                         </a>
                     </Link>
                 </div>
@@ -122,9 +121,17 @@ export default function Home(props) {
 
                     <main className="p-6 w-full flex flex-wrap justify-center items-center">
 
+
+                        <StatDisplay address={""}
+                            val={props.minimumRequired}
+                            title="minimum required to stake"
+                            price={props.usdPrice}
+                            suffix={props.suffixUppercase} suffixFull={props.suffixFull}
+                        />
+
                         <StatDisplay address={props.nominatorMinimum.who}
                             val={props.nominatorMinimum.valueF}
-                            title="minimum staked"
+                            title="current minimum staked"
                             price={props.usdPrice}
                             suffix={props.suffixUppercase} suffixFull={props.suffixFull}
                         />
@@ -135,15 +142,6 @@ export default function Home(props) {
                             price={props.usdPrice}
                             suffix={props.suffixUppercase} suffixFull={props.suffixFull}
                         />
-
-
-                        <StatDisplay address={props.nominatorMaximum.who}
-                            val={props.nominatorMaximum.valueF}
-                            title="most staked"
-                            price={props.usdPrice}
-                            suffix={props.suffixUppercase} suffixFull={props.suffixFull}
-                        />
-
 
                         {/* validator */}
                         <StatDisplay address={props.validatorMinimum.who}
@@ -221,7 +219,7 @@ export async function getServerSideProps(context) {
         suffixFull = 'kusama'
     }
 
-
+    let minimumRequired = await client.getAsync(`${suffix}:minimum:required`);
     let latestEra = await client.getAsync(`${suffix}:latest.era`);
 
     const getStakingStat = async function ({ suffix, typeKey, statKey, era }) {
@@ -325,6 +323,7 @@ export async function getServerSideProps(context) {
         props: {
             nominatorMinimum, nominatorMedian, nominatorMaximum,
             validatorMinimum, validatorMedian, validatorMaximum,
+            minimumRequired,
             latestEra,
             suffix,
             suffixFull,
