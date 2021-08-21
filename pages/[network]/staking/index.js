@@ -108,7 +108,7 @@ export default function Home(props) {
 
             <div className="w-full max-w-screen-xl min-h-screen">
 
-                <Header suffix={props.suffix} />
+                <Header suffix={props.suffix} usdPrice={props.usdPrice} />
 
                 <div className="flex justify-center text-center">
                     <Link href="/dot/identities" >
@@ -123,7 +123,7 @@ export default function Home(props) {
 
 
                         <StatDisplay address={""}
-                            val={props.minimumRequired}
+                            val={props.minimumRequired || 0}
                             title="minimum required to stake"
                             price={props.usdPrice}
                             suffix={props.suffixUppercase} suffixFull={props.suffixFull}

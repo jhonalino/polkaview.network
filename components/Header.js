@@ -17,7 +17,12 @@ export default function Header(props) {
                     </a>
                 </Link>
             </div>
-            <div className="text-right flex justify-end">
+            <div className="text-right flex flex-col justify-end">
+                <div className="mr-2 font-secondary">
+                    <div className={`text-${suffix === 'dot' ? 'dot' : 'ksm'} mb-2 text-right`} >
+                        {suffix.toUpperCase()} ${props.usdPrice}
+                    </div>
+                </div>
                 <Link href={suffix === 'dot' ? router.asPath.replace(`/dot`, `/ksm`) : router.asPath.replace(`/ksm`, `/dot`)}>
                     <a className={`text-${suffix === 'dot' ? 'ksm' : 'dot'} mb-2 text-right`} >
                         <span className="text-gray-500">switch to </span> {suffix === 'dot' ? 'kusama' : 'polkadot'}
