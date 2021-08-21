@@ -104,7 +104,7 @@ export default function Home(props) {
     return (
         <div className="w-full flex justify-center">
 
-            <Head title={`${props.suffixFull} minimum staking amount ${props.minimumRequired || props.nominatorMinimum.valueF} | Polkaview`} />
+            <Head title={`${props.minimumRequired || props.nominatorMinimum.valueF} ${props.suffixUppercase} is the ${props.suffixFull} minimum staking amount | Polkaview`} />
 
             <div className="w-full max-w-screen-xl min-h-screen">
 
