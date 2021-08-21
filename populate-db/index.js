@@ -387,6 +387,13 @@ const util = require('util');
     //move to the end to not cause issues when loading unfinished population
     await client.setAsync(`${suffix}:latest.era`, latestEra.toString());
 
+
+    let minimumRequired = await api.query.staking.minNominatorBond();
+
+    minimumRequired = minimumRequired.toJSON() / decimalPlaces;
+
+    await client.setAsync(`${suffix}:minimum:required`, minimumRequired);
+
     process.exit();
 
 })();
