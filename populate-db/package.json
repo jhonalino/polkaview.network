@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@polkadot/api": "^4.11.1",
+    "@polkadot/api": "^4.15.1",
     "async": "^3.2.0",
     "bluebird": "^3.7.2",
     "redis": "^3.1.2",

@@ -9,7 +9,7 @@
     "export": "next build && next export"
   },
   "dependencies": {
-    "@polkadot/api": "^4.16.2",
+    "@polkadot/api": "5.5.1",
     "@polkadot/react-identicon": "^0.78.1",
     "async": "^3.2.0",
     "autoprefixer": "^10.2.3",
