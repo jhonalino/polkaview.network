@@ -1,0 +1,8 @@
+
+ssh polkaview@45.79.175.203
+
+cd /home/polkaview/polkaview.network
+
+git pull
+
+sudo ./restart-prod
