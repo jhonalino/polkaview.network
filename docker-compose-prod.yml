@@ -39,7 +39,7 @@ services:
         image: polkaview:latest
         labels:
             - traefik.enable=true
-            - traefik.http.routers.polkadot.rule=Host(`polkaview.network, treasuries.network`)
+            - traefik.http.routers.polkadot.rule=Host(`polkaview.network`, `treasuries.network`)
             - traefik.http.routers.polkadot.tls=true
             - traefik.http.routers.polkadot.tls.certresolver=lets-encrypt
             - traefik.http.services.polkadot.loadbalancer.server.port=3000
