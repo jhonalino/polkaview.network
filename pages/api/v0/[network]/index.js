@@ -47,6 +47,7 @@ export default async function handler(req, res) {
 
 
     let latestEra = await client.getAsync(`${suffix}:latest.era`);
+    let minimumRequired = await client.getAsync(`${suffix}:minimum:required`);
 
     const getStakingStat = async function ({ suffix, typeKey, statKey, era }) {
 
@@ -114,6 +115,7 @@ export default async function handler(req, res) {
         validatorHighest,
         validatorLowest,
         suffix: suffix.toUpperCase(),
+        minimumRequired,
         suffixFull,
     });
 
