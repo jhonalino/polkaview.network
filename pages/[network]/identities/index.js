@@ -132,10 +132,10 @@ export default function Index(props) {
 
             setLoadingText('connecting to ' + props.suffixFull + ' blockchain');
 
-            let wsUrl = 'wss://polkadot-node.polkaview.network';
+            let wsUrl = 'wss://service.elara.patract.io/Polkadot/e51e125fa94166bd8079fd3a9d28d003';
 
             if (props.suffix === 'ksm') {
-                wsUrl = 'wss://kusama-node.polkaview.network';
+                wsUrl = 'wss://service.elara.patract.io/Kusama/91da87140c6677810758f26f4e818784';
             }
 
             const wsProvider = new WsProvider(wsUrl);
